@@ -40,3 +40,16 @@ a {
   margin: 0 auto;
   padding: 0 15px;
 }
+
+.slick-prev,
+.slick-next {
+  &::before {
+    content: none !important;
+  }
+}
+
+.slick-prev,
+.slick-next {
+  font-size: 1.4rem !important;
+  color: var(--mainColor) !important;
+}
