@@ -2,8 +2,11 @@ import HomePage from "../pages/HomePage/HomePage";
 import ProductPage from "../pages/ProductPage/ProductPage";
 import OrderPage from "../pages/OrderPage/OrderPage";
 import NotFoundPage from "../pages/NotFoundPage/NotFoundPage";
+import News from "../pages/News/News";
+import Contact from "../pages/Contact/Contact";
+import Cart from "../pages/Cart/Cart";
+
 import DefaultLayout from "../layouts/DefaultLayout/DefaultLayout";
-import HeaderOnly from "../layouts/HeaderOnly/HeaderOnly";
 
 const routes = [
   {
@@ -19,11 +22,28 @@ const routes = [
   {
     path: "/order",
     page: OrderPage,
-    layout: HeaderOnly,
+    layout: DefaultLayout,
+  },
+
+  {
+    path: "/news",
+    page: News,
+    layout: DefaultLayout,
+  },
+  {
+    path: "/contact",
+    page: Contact,
+    layout: DefaultLayout,
+  },
+  {
+    path: "/cart",
+    page: Cart,
+    layout: DefaultLayout,
   },
   {
     path: "*",
     page: NotFoundPage,
+    layout: DefaultLayout,
   },
 ];
 

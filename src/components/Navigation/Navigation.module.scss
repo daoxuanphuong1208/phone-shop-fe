@@ -1,0 +1,28 @@
+.nav {
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--mainColor);
+}
+
+.nav-list {
+  display: flex;
+  padding: 0 50px;
+  gap: 10px;
+  border-radius: 8px;
+  background-color: var(--colorWhite);
+
+  .nav-item {
+    padding: 10px 15px;
+    font-size: 1.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--textColorBlack);
+    cursor: pointer;
+
+    &:hover {
+      color: var(--subColor);
+    }
+  }
+}

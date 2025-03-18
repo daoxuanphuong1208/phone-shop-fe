@@ -1,11 +1,13 @@
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
+import Navigation from "../../components/Navigation/Navigation";
 
-const DefaultLayout = ({ children }) => {
+const DefaultLayout = (props) => {
   return (
     <div>
       <Header />
-      {children}
+      <Navigation />
+      {props.children}
       <Footer />
     </div>
   );

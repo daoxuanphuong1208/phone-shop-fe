@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import classNames from "classnames/bind";
 import { Image, Input, Button, ConfigProvider, Dropdown } from "antd";
 import {
@@ -43,6 +44,7 @@ const items = [
 
 const Header = () => {
   // state
+  let navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
 
   // handle
@@ -65,10 +67,7 @@ const Header = () => {
       }}
     >
       <header className={cx("header", "container")}>
-        <div
-          onClick={() => (window.location.href = "/")}
-          className={cx("header-logo")}
-        >
+        <div onClick={() => navigate("/")} className={cx("header-logo")}>
           <Image
             width={50}
             height={50}
@@ -94,7 +93,7 @@ const Header = () => {
           />
         </div>
         <div className={cx("header-actions")}>
-          <div className={cx("cart")}>
+          <div onClick={() => navigate("/cart")} className={cx("cart")}>
             <ShoppingOutlined className={cx("icon")} />
             <span className={cx("count")}>0</span>
           </div>
