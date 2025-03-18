@@ -60,7 +60,6 @@ function PrevArrow(props) {
 const SliderComponent = (props) => {
   const { arrImages } = props;
   const settings = {
-    dots: true,
     infinite: true,
     slidesToShow: 1,
     slidesToScroll: 1,
@@ -74,7 +73,7 @@ const SliderComponent = (props) => {
           <Image
             preview={false}
             width="100%"
-            height="500px"
+            height="460px"
             src={image}
             key={index}
             alt={`slider ${index}`}

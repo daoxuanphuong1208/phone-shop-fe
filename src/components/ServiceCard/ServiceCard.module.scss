@@ -1,0 +1,15 @@
+.wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.text-content {
+  font-size: 1.6rem;
+  color: var(--mainColor);
+
+  span {
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+}
