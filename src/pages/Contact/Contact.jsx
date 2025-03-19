@@ -1,24 +1,9 @@
-import { Breadcrumb } from "antd";
+import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
 
 const Contact = () => {
   return (
     <div>
-      <Breadcrumb
-        items={[
-          {
-            title: "Trang chủ",
-          },
-          {
-            title: <a href="">Application Center</a>,
-          },
-          {
-            title: <a href="">Application List</a>,
-          },
-          {
-            title: "An Application",
-          },
-        ]}
-      />
+      <Breadcrumb />
     </div>
   );
 };

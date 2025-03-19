@@ -1,31 +1,16 @@
-import { Breadcrumb } from "antd";
 import classNames from "classnames/bind";
 import styles from "./ProductPage.module.scss";
 
 import ProductList from "../../components/ProductList/ProductList";
 import BoxWrapper from "../../components/BoxWrapper/BoxWrapper";
+import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
 
 const cx = classNames.bind(styles);
 
 const ProductPage = () => {
   return (
     <div className={cx("wrapper", "container")}>
-      <Breadcrumb
-        items={[
-          {
-            title: "Trang chủ",
-          },
-          {
-            title: <a href="">Application Center</a>,
-          },
-          {
-            title: <a href="">Application List</a>,
-          },
-          {
-            title: "An Application",
-          },
-        ]}
-      />
+      <Breadcrumb />
       <div className={cx("content")}>
         <div>
           <BoxWrapper />
