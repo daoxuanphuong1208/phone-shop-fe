@@ -1,0 +1,46 @@
+.footer {
+  display: flex;
+  justify-content: space-around;
+  padding: 30px 0;
+  font-size: 1.6rem;
+  background-color: #f1f1f1;
+
+  .title {
+    color: var(--textColorBlack);
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .content {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .title-highlight {
+    font-weight: bold;
+  }
+
+  .sub-highlight {
+    color: var(--mainColor);
+  }
+
+  .icon-facebook {
+    font-size: 4rem;
+    color: #1877f2;
+    cursor: pointer;
+  }
+
+  ul {
+    list-style-type: square;
+  }
+
+  li {
+    margin-left: 18px;
+  }
+
+  a:hover {
+    color: var(--mainColor);
+  }
+}
