@@ -1,0 +1,44 @@
+.wrapper {
+  margin-top: 40px;
+
+  .header {
+    position: relative;
+    width: 100%;
+    height: 50px;
+    font-size: 1.7rem;
+    font-weight: 600;
+    border-radius: 8px;
+    border-bottom: 2px solid var(--subColor);
+    background-image: var(--bgFrame);
+
+    .label {
+      display: inline-block;
+      padding: 10px 16px 10px 150px;
+      color: var(--textColorWhite);
+      background-color: #503eb6;
+      border-radius: 8px;
+    }
+
+    .model {
+      position: absolute;
+      left: 10px;
+      background-size: cover;
+      background-repeat: no-repeat;
+      width: 140px;
+      height: 37px;
+      top: -8px;
+      box-sizing: border-box;
+      padding-left: 0px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+      color: var(--mainColor);
+      background-image: url("../../assets/images/bg_model.webp");
+    }
+  }
+}
+
+.product-list {
+  margin-top: 15px;
+}

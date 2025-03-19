@@ -1,5 +1,4 @@
-import { Dropdown, message, Image } from "antd";
-import { DownOutlined } from "@ant-design/icons";
+import { Image } from "antd";
 import classNames from "classnames/bind";
 import styles from "./ServiceCard.module.scss";
 const cx = classNames.bind(styles);

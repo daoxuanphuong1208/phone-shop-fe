@@ -11,6 +11,7 @@ import service_1 from "../../assets/images/service_1.webp";
 import service_2 from "../../assets/images/service_2.png";
 import service_3 from "../../assets/images/service_3.png";
 import service_4 from "../../assets/images/service_4.png";
+import FrameProduct from "../../components/FrameProduct/FrameProduct";
 
 const cx = classNames.bind(styles);
 const HomePage = () => {
@@ -63,19 +64,22 @@ const HomePage = () => {
   ];
 
   return (
-    <main className={cx("wrapper", "container")}>
-      <Slider arrImages={arrImages} />
-      <div className={cx("service")}>
-        {arrService.map((image, index) => {
-          return (
-            <ServiceCard
-              image={image.src}
-              text1={image.text1}
-              text2={image.text2}
-              key={index}
-            />
-          );
-        })}
+    <main className={cx("wrapper")}>
+      <div className="container">
+        <Slider arrImages={arrImages} />
+        <div className={cx("service")}>
+          {arrService.map((image, index) => {
+            return (
+              <ServiceCard
+                image={image.src}
+                text1={image.text1}
+                text2={image.text2}
+                key={index}
+              />
+            );
+          })}
+        </div>
+        <FrameProduct />
       </div>
     </main>
   );

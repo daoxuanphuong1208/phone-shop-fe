@@ -9,6 +9,8 @@
   --textColorWhite: #fff;
   --colorWhite: #fff;
   --colorBlack: #000;
+  --bgMain: #f6f6f6;
+  --bgFrame: linear-gradient(#503eb6, #a9a3c3);
 }
 
 * {
