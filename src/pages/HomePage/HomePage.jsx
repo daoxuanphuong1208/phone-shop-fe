@@ -80,6 +80,10 @@ const HomePage = () => {
           })}
         </div>
         <FrameProduct />
+        <FrameProduct />
+        <FrameProduct />
+
+        <div>Tin tức</div>
       </div>
     </main>
   );

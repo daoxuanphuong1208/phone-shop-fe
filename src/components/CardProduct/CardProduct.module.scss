@@ -1,0 +1,189 @@
+.wrapper {
+  position: relative;
+  overflow: hidden;
+  border-radius: 5px;
+  background-color: var(--colorWhite);
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 4px 0px,
+    rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;
+
+  .content {
+    padding: 10px 10px;
+    background-color: var(--colorWhite);
+  }
+
+  .image {
+    width: 100%;
+    height: 230px;
+    border-radius: 5px 5px 0 0;
+    transform: scale(1);
+    transition: all 0.5s ease;
+    cursor: pointer;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+
+  .badge {
+    position: absolute;
+    font-weight: 400;
+    font-size: 1.2rem;
+    top: 200px;
+    left: 5px;
+    padding: 0px 8px;
+    border-radius: 15px;
+    height: 22px;
+    line-height: 22px;
+    color: var(--colorWhite);
+    background-color: #c90000;
+  }
+
+  .name {
+    font-size: 1.4rem;
+    font-weight: 400;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    white-space: unset;
+    line-height: 20px;
+    height: 40px;
+    cursor: pointer;
+    margin-bottom: 0.5rem;
+    word-wrap: break-word;
+
+    &:hover {
+      color: var(--subColor);
+    }
+  }
+
+  .sold {
+    position: relative;
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    border-radius: 7px;
+    color: var(--textColorWhite);
+    background-color: rgb(201, 4, 4);
+    background-size: 40px 40px;
+    background-image: linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.25) 25%,
+      transparent 25%,
+      transparent 50%,
+      rgba(255, 255, 255, 0.25) 50%,
+      rgba(255, 255, 255, 0.25) 75%,
+      transparent 75%,
+      transparent
+    );
+    border-radius: 7px;
+    animation: 2s linear 0s infinite normal none running progress_bar_fill;
+    span {
+      width: 18px;
+      height: 21px;
+      position: absolute;
+      left: -7px;
+      top: -6px;
+      z-index: 1;
+      background: url("../../assets/images/fire_icon.png") 0px center / contain
+        no-repeat;
+    }
+  }
+
+  .gift {
+    padding: 3px;
+    margin-top: 5px;
+    border-radius: 5px;
+    background: #f3f4f6;
+    border: 1px solid #e5e7eb;
+    color: #444;
+    font-weight: 400;
+    font-size: 1.2rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    white-space: unset;
+    line-height: 16px;
+    max-height: 40px;
+  }
+}
+
+.cart-wrap {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  z-index: 2;
+  cursor: pointer;
+  background-color: var(--mainColor);
+
+  &:hover {
+    background-color: var(--subColor);
+  }
+
+  .cart-icon {
+    font-size: 2.2rem;
+    color: var(--colorWhite);
+  }
+}
+
+.sales {
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  height: 22px;
+  text-align: center;
+  border-radius: 5px 5px 5px 0px;
+  padding: 0px 10px;
+  color: var(--colorWhite);
+  background: linear-gradient(93.01deg, #ff6700 15.48%, #f9920f 92.66%);
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 20px;
+    border-right: 10px solid transparent;
+    border-bottom: 0px solid transparent;
+    border-top: 10px solid #ff6700;
+  }
+}
+
+.price-box {
+  display: flex;
+  justify-content: space-between;
+
+  .price-wrap {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .price {
+    font-size: 1.6rem;
+    font-weight: 600;
+    line-height: 1;
+    margin-bottom: 2px;
+    color: #c90000;
+  }
+
+  .compare-price {
+    font-size: 1.3rem;
+    color: #98a4a9;
+    text-decoration: line-through;
+    line-height: 1;
+  }
+}
+
+@keyframes progress_bar_fill {
+  0% {
+    background-position: 0px 0px;
+  }
+  100% {
+    background-position: 40px 0px;
+  }
+}

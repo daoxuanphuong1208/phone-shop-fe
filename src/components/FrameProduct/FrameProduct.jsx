@@ -1,6 +1,6 @@
 import classNames from "classnames/bind";
 import styles from "./FrameProduct.module.scss";
-import { Image } from "antd";
+import CardProduct from "../CardProduct/CardProduct";
 
 const cx = classNames.bind(styles);
 
@@ -14,7 +14,16 @@ const FrameProduct = (props) => {
           <div>iPhone</div>
         </div>
       </div>
-      <div className={cx("product-list")}></div>
+      <div className={cx("product-list")}>
+        <CardProduct />
+        <CardProduct />
+        <CardProduct />
+        <CardProduct />
+        <CardProduct />
+      </div>
+      <div className={cx("show-more")}>
+        <button className={cx("btn")}>Xem thêm sản phẩm</button>
+      </div>
     </section>
   );
 };
