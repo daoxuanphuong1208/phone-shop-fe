@@ -2,7 +2,7 @@ import { Breadcrumb } from "antd";
 import classNames from "classnames/bind";
 import styles from "./ProductPage.module.scss";
 
-import CardProduct from "../../components/CardProduct/CardProduct";
+import ProductList from "../../components/ProductList/ProductList";
 import BoxWrapper from "../../components/BoxWrapper/BoxWrapper";
 
 const cx = classNames.bind(styles);
@@ -26,18 +26,14 @@ const ProductPage = () => {
           },
         ]}
       />
-      <div>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr",
-          }}
-        >
+      <div className={cx("content")}>
+        <div>
           <BoxWrapper />
-          <CardProduct />
-          <CardProduct />
-          <CardProduct />
-          <CardProduct />
+          <BoxWrapper />
+          <BoxWrapper />
+        </div>
+        <div>
+          <ProductList col={4} gap={10} />
         </div>
       </div>
     </div>

@@ -1,9 +1,9 @@
+import { RightCircleOutlined } from "@ant-design/icons";
 import classNames from "classnames/bind";
 import styles from "./BoxWrapper.module.scss";
 const cx = classNames.bind(styles);
 
 const BoxWrapper = () => {
-  const a = "a";
   const itemFist = true;
   return (
     <div className={cx("wrapper")}>
@@ -12,31 +12,31 @@ const BoxWrapper = () => {
       </h4>
       <ul className={cx("content")}>
         <li>
-          <span>{itemFist && a}</span>
+          <span>{itemFist && <RightCircleOutlined />}</span>
           <span>iPhone</span>
         </li>
         <li>
-          <span>{itemFist && a}</span>
+          <span>{itemFist && <RightCircleOutlined />}</span>
           <span>Samsung</span>
         </li>
         <li>
-          <span>{itemFist && a}</span>
+          <span>{itemFist && <RightCircleOutlined />}</span>
           <span>Xiaomi</span>
         </li>
         <li>
-          <span>{itemFist && a}</span>
+          <span>{itemFist && <RightCircleOutlined />}</span>
           <span>Oppo</span>
         </li>
         <li>
-          <span>{itemFist && a}</span>
+          <span>{itemFist && <RightCircleOutlined />}</span>
           <span>Oppo</span>
         </li>
         <li>
-          <span>{itemFist && a}</span>
+          <span>{itemFist && <RightCircleOutlined />}</span>
           <span>Oppo</span>
         </li>
         <li>
-          <span>{itemFist && a}</span>
+          <span>{itemFist && <RightCircleOutlined />}</span>
           <span>Oppo</span>
         </li>
       </ul>

@@ -1,4 +1,5 @@
 .wrapper {
+  margin-bottom: 15px;
 }
 
 .title {
@@ -15,7 +16,6 @@
   border-left: 1px solid var(--mainColor);
   border-right: 1px solid var(--mainColor);
   border-bottom: 1px solid var(--mainColor);
-  border-radius: 0 0 8px 8px;
   padding: 5px 10px;
   max-height: 200px;
   overflow-y: scroll;
@@ -24,7 +24,20 @@
     padding: 10px 0;
 
     span:nth-child(1) {
-      margin-right: 10px;
+      margin-right: 8px;
     }
   }
+}
+
+.content::-webkit-scrollbar {
+  width: 4px;
+}
+
+.content::-webkit-scrollbar-thumb {
+  background-color: var(--subColor);
+  border-radius: 8px;
+}
+
+.content::-webkit-scrollbar-track {
+  background: #dcdcdc;
 }
