@@ -12,6 +12,7 @@ import service_2 from "../../assets/images/service_2.png";
 import service_3 from "../../assets/images/service_3.png";
 import service_4 from "../../assets/images/service_4.png";
 import FrameProduct from "../../components/FrameProduct/FrameProduct";
+import News from "../../components/News/News";
 
 const cx = classNames.bind(styles);
 const HomePage = () => {
@@ -83,7 +84,15 @@ const HomePage = () => {
         <FrameProduct />
         <FrameProduct />
 
-        <div>Tin tức</div>
+        <div className={cx("news-wrap")}>
+          <h1 className={cx("news")}>Tin tức</h1>
+          <hr />
+          <div className={cx("news-list")}>
+            <News />
+            <News />
+            <News />
+          </div>
+        </div>
       </div>
     </main>
   );
