@@ -1,7 +1,26 @@
-import React from "react";
+import { Breadcrumb } from "antd";
 
 const OrderPage = () => {
-  return <div>OrderPage</div>;
+  return (
+    <div>
+      <Breadcrumb
+        items={[
+          {
+            title: "Trang chủ",
+          },
+          {
+            title: <a href="">Application Center</a>,
+          },
+          {
+            title: <a href="">Application List</a>,
+          },
+          {
+            title: "An Application",
+          },
+        ]}
+      />
+    </div>
+  );
 };
 
 export default OrderPage;

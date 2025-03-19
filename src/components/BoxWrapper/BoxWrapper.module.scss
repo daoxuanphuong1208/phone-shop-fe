@@ -1,0 +1,30 @@
+.wrapper {
+}
+
+.title {
+  padding: 8px 15px;
+  font-size: 1.6rem;
+  font-weight: 500;
+  border-radius: 8px 8px 0 0;
+  text-transform: uppercase;
+  color: var(--textColorWhite);
+  background-color: var(--mainColor);
+}
+
+.content {
+  border-left: 1px solid var(--mainColor);
+  border-right: 1px solid var(--mainColor);
+  border-bottom: 1px solid var(--mainColor);
+  border-radius: 0 0 8px 8px;
+  padding: 5px 10px;
+  max-height: 200px;
+  overflow-y: scroll;
+
+  li {
+    padding: 10px 0;
+
+    span:nth-child(1) {
+      margin-right: 10px;
+    }
+  }
+}

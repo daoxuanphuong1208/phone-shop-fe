@@ -15,6 +15,7 @@
     width: 100%;
     height: 230px;
     border-radius: 5px 5px 0 0;
+    object-fit: contain;
     transform: scale(1);
     transition: all 0.5s ease;
     cursor: pointer;
@@ -152,6 +153,23 @@
     border-bottom: 0px solid transparent;
     border-top: 10px solid #ff6700;
   }
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -50px;
+    width: 40px;
+    height: 100%;
+    background: linear-gradient(
+      120deg,
+      rgba(255, 255, 255, 0.2) 20%,
+      rgba(255, 255, 255, 0.6) 50%,
+      rgba(255, 255, 255, 0.2) 80%
+    );
+    transform: skewX(-20deg);
+    animation: shimmer 1.5s infinite linear;
+  }
 }
 
 .price-box {
@@ -185,5 +203,14 @@
   }
   100% {
     background-position: 40px 0px;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    left: -50px;
+  }
+  100% {
+    left: 100%;
   }
 }
