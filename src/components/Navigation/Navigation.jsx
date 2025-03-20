@@ -44,7 +44,7 @@ const Navigation = () => {
               onClick,
             }}
           >
-            <a onClick={() => navigate("/product")}>
+            <a onClick={() => navigate("/type")}>
               Sản phẩm <DownOutlined />
             </a>
           </Dropdown>

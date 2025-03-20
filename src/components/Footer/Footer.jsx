@@ -35,7 +35,7 @@ const Footer = () => {
             <a href="/">Trang chủ</a>
           </li>
           <li>
-            <a href="/product">Sản phẩm</a>
+            <a href="/type">Sản phẩm</a>
           </li>
           <li>
             <a href="/news">Tin tức</a>

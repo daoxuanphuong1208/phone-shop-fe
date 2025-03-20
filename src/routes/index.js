@@ -1,7 +1,10 @@
 import HomePage from "../pages/HomePage/HomePage";
-import ProductPage from "../pages/ProductPage/ProductPage";
+import TypeProductPage from "../pages/TypeProductPage/TypeProductPage";
 import OrderPage from "../pages/OrderPage/OrderPage";
 import SearchPage from "../pages/SearchPage/SearchPage";
+import ProductDetail from "../pages/ProductDetail/ProductDetail";
+import SignInPage from "../pages/SignInPage/SignInPage";
+import SignUpPage from "../pages/SignUpPage/SignUpPage";
 import NotFoundPage from "../pages/NotFoundPage/NotFoundPage";
 import News from "../pages/News/News";
 import Contact from "../pages/Contact/Contact";
@@ -16,8 +19,8 @@ const routes = [
     layout: DefaultLayout,
   },
   {
-    path: "/product",
-    page: ProductPage,
+    path: "/:type",
+    page: TypeProductPage,
     layout: DefaultLayout,
   },
   {
@@ -44,6 +47,21 @@ const routes = [
   {
     path: "/search",
     page: SearchPage,
+    layout: DefaultLayout,
+  },
+  {
+    path: "/product-details",
+    page: ProductDetail,
+    layout: DefaultLayout,
+  },
+  {
+    path: "/sign-in",
+    page: SignInPage,
+    layout: DefaultLayout,
+  },
+  {
+    path: "/sign-up",
+    page: SignUpPage,
     layout: DefaultLayout,
   },
   {
