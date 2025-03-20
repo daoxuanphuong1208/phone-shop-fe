@@ -1,6 +1,7 @@
 import HomePage from "../pages/HomePage/HomePage";
 import ProductPage from "../pages/ProductPage/ProductPage";
 import OrderPage from "../pages/OrderPage/OrderPage";
+import SearchPage from "../pages/SearchPage/SearchPage";
 import NotFoundPage from "../pages/NotFoundPage/NotFoundPage";
 import News from "../pages/News/News";
 import Contact from "../pages/Contact/Contact";
@@ -38,6 +39,11 @@ const routes = [
   {
     path: "/cart",
     page: Cart,
+    layout: DefaultLayout,
+  },
+  {
+    path: "/search",
+    page: SearchPage,
     layout: DefaultLayout,
   },
   {

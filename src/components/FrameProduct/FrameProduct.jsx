@@ -2,7 +2,6 @@ import classNames from "classnames/bind";
 import styles from "./FrameProduct.module.scss";
 
 import ProductList from "../ProductList/ProductList";
-import CardProduct from "../CardProduct/CardProduct";
 
 const cx = classNames.bind(styles);
 
