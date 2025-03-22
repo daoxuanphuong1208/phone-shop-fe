@@ -81,12 +81,12 @@ const SignUpPage = () => {
               }}
             >
               <Button block type="primary" htmlType="submit">
-                Log in
+                Đăng ký
               </Button>
             </ConfigProvider>
           </Form.Item>
-          <div className={cx("footer-title")}>Hoặc đăng nhập bằng</div>
-          <div className={cx("social-login")}>
+          <div className={cx("footer-title")}>Hoặc đăng ký bằng</div>
+          <div className={cx("social-register")}>
             <div className={cx("facebook")}>
               <FacebookFilled />
               <span>Facebook</span>
