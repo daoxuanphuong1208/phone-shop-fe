@@ -1,4 +1,4 @@
-import { Image } from "antd";
+import { Image, InputNumber } from "antd";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import classNames from "classnames/bind";
 import styles from "./ProductDetail.module.scss";
@@ -9,10 +9,13 @@ import product_details_return from "../../assets/images/product_details_return.p
 import product_details_commit from "../../assets/images/product_details_commit.png";
 import product_details_transport from "../../assets/images/product_details_transport.png";
 import product_details_warranty from "../../assets/images/product_details_warranty.png";
+import { useState } from "react";
 
 const cx = classNames.bind(styles);
 
 const ProductDetail = () => {
+  function onChange(value) {}
+
   return (
     <div className={cx("wrapper", "container")}>
       <Breadcrumb />
@@ -42,6 +45,15 @@ const ProductDetail = () => {
           <div className={cx("gift")}>
             <div>Quà tặng khuyến mãi</div>
             <span>Tặng Sạc cáp nhanh 20w giới hạn trị giá 250k</span>
+          </div>
+          <div className={cx("count")}>
+            <InputNumber
+              min={1}
+              max={10}
+              defaultValue={1}
+              size="large"
+              onChange={onChange}
+            />
           </div>
           <div className={cx("btn")}>
             <button className={cx("btn-add")}>Thêm vào giỏ hàng</button>
