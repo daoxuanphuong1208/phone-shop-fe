@@ -17,9 +17,9 @@ const TypeProductPage = () => {
       <Breadcrumb />
       <div className={cx("content")}>
         <div>
-          <BoxWrapper />
-          <BoxWrapper />
-          <BoxWrapper />
+          <BoxWrapper titles={["A", "B", "C", "D", "E", "F"]} />
+          <BoxWrapper titles={["A", "B", "C", "D", "E", "F"]} />
+          <BoxWrapper titles={["A", "B", "C", "D", "E", "F"]} />
         </div>
         <div>
           <ProductList col={4} gap={10} />

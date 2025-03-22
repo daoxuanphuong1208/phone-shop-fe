@@ -27,6 +27,11 @@
       margin-right: 8px;
     }
   }
+
+  .wrapper-item {
+    display: flex;
+    align-items: center;
+  }
 }
 
 .content::-webkit-scrollbar {

@@ -27,8 +27,8 @@ const CardProduct = () => {
             <ShoppingCartOutlined className={cx("cart-icon")} />
           </div>
         </div>
-        <div className={cx("sold")}>
-          Đã bán 101 sp
+        <div className={cx("status")}>
+          Tình trạng: Mới 99%
           <span></span>
         </div>
         <div className={cx("gift")}>

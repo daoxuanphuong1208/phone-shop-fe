@@ -3,7 +3,9 @@ import classNames from "classnames/bind";
 import styles from "./BoxWrapper.module.scss";
 const cx = classNames.bind(styles);
 
-const BoxWrapper = () => {
+const BoxWrapper = (props) => {
+  const { icons, titles } = props;
+
   const itemFist = true;
   return (
     <div className={cx("wrapper")}>
@@ -11,34 +13,12 @@ const BoxWrapper = () => {
         <span>Loại sản phẩm</span>
       </h4>
       <ul className={cx("content")}>
-        <li>
-          <span>{itemFist && <RightCircleOutlined />}</span>
-          <span>iPhone</span>
-        </li>
-        <li>
-          <span>{itemFist && <RightCircleOutlined />}</span>
-          <span>Samsung</span>
-        </li>
-        <li>
-          <span>{itemFist && <RightCircleOutlined />}</span>
-          <span>Xiaomi</span>
-        </li>
-        <li>
-          <span>{itemFist && <RightCircleOutlined />}</span>
-          <span>Oppo</span>
-        </li>
-        <li>
-          <span>{itemFist && <RightCircleOutlined />}</span>
-          <span>Oppo</span>
-        </li>
-        <li>
-          <span>{itemFist && <RightCircleOutlined />}</span>
-          <span>Oppo</span>
-        </li>
-        <li>
-          <span>{itemFist && <RightCircleOutlined />}</span>
-          <span>Oppo</span>
-        </li>
+        {titles.map((title, index) => (
+          <li className={cx("wrapper-item")} key={index}>
+            <span>{icons && icons[index]}</span>
+            <span>{title}</span>
+          </li>
+        ))}
       </ul>
     </div>
   );
