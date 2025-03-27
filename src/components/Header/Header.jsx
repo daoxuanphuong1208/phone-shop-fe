@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import classNames from "classnames/bind";
 import { Image, Input, Button, ConfigProvider, Dropdown } from "antd";
@@ -9,9 +9,10 @@ import {
   DownOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
-
 import styles from "./Header.module.scss";
 import logo from "../../assets/images/logo.png";
+import { useSelector } from "react-redux";
+
 const cx = classNames.bind(styles);
 const { Search } = Input;
 
@@ -44,10 +45,14 @@ const items = [
 
 const Header = () => {
   // state
+  const user = useSelector((state) => state.user);
   let navigate = useNavigate();
-  const [isLogin, setIsLogin] = useState(true);
 
   // handle
+
+  const handleNavigateLogin = () => {
+    navigate("/sign-in");
+  };
 
   return (
     <ConfigProvider
@@ -98,7 +103,7 @@ const Header = () => {
             <span className={cx("count")}>0</span>
           </div>
           <div className={cx("account")}>
-            {isLogin ? (
+            {user.name || user.email ? (
               <Dropdown
                 menu={{
                   items,
@@ -114,13 +119,16 @@ const Header = () => {
                       preview={false}
                     />
                     <div>
-                      <span>Đào Xuân Phượng</span> <DownOutlined />
+                      <span>{user.name || user.email}</span> <DownOutlined />
                     </div>
                   </div>
                 </a>
               </Dropdown>
             ) : (
-              <div className={cx("login-wrapper")}>
+              <div
+                onClick={handleNavigateLogin}
+                className={cx("login-wrapper")}
+              >
                 <UserOutlined className={cx("icon")} />
                 <div>
                   <div>Đăng ký</div>
