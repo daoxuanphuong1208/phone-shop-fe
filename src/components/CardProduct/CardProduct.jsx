@@ -1,4 +1,3 @@
-import { Dropdown, message, Image } from "antd";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import classNames from "classnames/bind";
 import styles from "./CardProduct.module.scss";

@@ -1,8 +1,4 @@
-import {
-  FacebookFilled,
-  GooglePlusSquareFilled,
-  LoadingOutlined,
-} from "@ant-design/icons";
+import { FacebookFilled, GooglePlusSquareFilled } from "@ant-design/icons";
 import { Button, ConfigProvider, Form, Input, message } from "antd";
 import classNames from "classnames/bind";
 import styles from "./SignInPage.module.scss";

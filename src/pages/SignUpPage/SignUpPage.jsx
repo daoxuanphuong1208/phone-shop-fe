@@ -3,7 +3,6 @@ import { Button, ConfigProvider, Form, Input, message } from "antd";
 import classNames from "classnames/bind";
 import styles from "./SignUpPage.module.scss";
 import { useNavigate } from "react-router";
-import axios from "axios";
 import * as UserServices from "../../services/UserSevice";
 import { useMutationHooks } from "../../hooks/useMutationHooks";
 import Loading from "../../components/Loading/Loading";
