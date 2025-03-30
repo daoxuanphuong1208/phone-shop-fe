@@ -9,6 +9,7 @@ import NotFoundPage from "../pages/NotFoundPage/NotFoundPage";
 import News from "../pages/News/News";
 import Contact from "../pages/Contact/Contact";
 import Cart from "../pages/Cart/Cart";
+import Profile from "../pages/Profile/Profile";
 
 import DefaultLayout from "../layouts/DefaultLayout/DefaultLayout";
 
@@ -62,6 +63,11 @@ const routes = [
   {
     path: "/sign-up",
     page: SignUpPage,
+    layout: DefaultLayout,
+  },
+  {
+    path: "/profile",
+    page: Profile,
     layout: DefaultLayout,
   },
   {

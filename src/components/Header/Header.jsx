@@ -6,7 +6,9 @@ import {
   ShoppingOutlined,
   SearchOutlined,
   DownOutlined,
-  SettingOutlined,
+  LogoutOutlined,
+  InfoCircleOutlined,
+  ProductOutlined,
 } from "@ant-design/icons";
 import styles from "./Header.module.scss";
 import logo from "../../assets/images/logo.png";
@@ -14,11 +16,13 @@ import { useSelector } from "react-redux";
 import * as UserServices from "../../services/UserSevice";
 import { useDispatch } from "react-redux";
 import { resetUser } from "../../redux/slides/userSlice";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Loading from "../../components/Loading/Loading";
 
 const cx = classNames.bind(styles);
 const { Search } = Input;
+const DEFAULT_AVATAR =
+  "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=170667a&w=0&k=20&c=LPUo_WZjbXXNnF6ok4uQr8I_Zj6WUVnH_FpREg21qaY=";
 
 const Header = () => {
   // state
@@ -26,6 +30,13 @@ const Header = () => {
   const user = useSelector((state) => state.user);
   let navigate = useNavigate();
   const dispatch = useDispatch();
+  const [userName, setUserName] = useState("");
+
+  useEffect(() => {
+    setLoading(true);
+    setUserName(user?.name);
+    setLoading(false);
+  }, [user?.name]);
 
   // handle
 
@@ -43,24 +54,30 @@ const Header = () => {
 
   const items = [
     {
+      type: "divider",
+    },
+    {
       key: "1",
-      label: <span>Cài đặt</span>,
-      icon: <SettingOutlined />,
+      label: (
+        <span onClick={() => navigate("/profile")}>Thông tin người dùng</span>
+      ),
+      icon: <InfoCircleOutlined />,
     },
     {
       type: "divider",
     },
     {
       key: "2",
-      label: <span>Thông tin người dùng</span>,
+      label: <span>Đơn hàng của tôi</span>,
+      icon: <ProductOutlined />,
+    },
+    {
+      type: "divider",
     },
     {
       key: "3",
-      label: <span>Đơn hàng của tôi</span>,
-    },
-    {
-      key: "4",
       label: <span onClick={handleLogout}>Đăng xuất</span>,
+      icon: <LogoutOutlined />,
     },
   ];
 
@@ -122,15 +139,14 @@ const Header = () => {
                 >
                   <a onClick={(e) => e.preventDefault()}>
                     <div className={cx("avatar-wrapper")}>
-                      <Image
-                        src="https://cdn-icons-png.flaticon.com/512/219/219983.png"
-                        width={28}
-                        height={28}
-                        className={cx("avatar")}
-                        preview={false}
-                      />
+                      <div className={cx("avatar")}>
+                        <img
+                          src={user?.avatar || DEFAULT_AVATAR}
+                          alt="avatar"
+                        />
+                      </div>
                       <div>
-                        <span>{user.name || user.email}</span> <DownOutlined />
+                        <span>{userName || user.email}</span> <DownOutlined />
                       </div>
                     </div>
                   </a>

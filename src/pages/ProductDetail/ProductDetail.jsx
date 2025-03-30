@@ -9,7 +9,6 @@ import product_details_return from "../../assets/images/product_details_return.p
 import product_details_commit from "../../assets/images/product_details_commit.png";
 import product_details_transport from "../../assets/images/product_details_transport.png";
 import product_details_warranty from "../../assets/images/product_details_warranty.png";
-import { useState } from "react";
 
 const cx = classNames.bind(styles);
 
