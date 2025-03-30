@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import classNames from "classnames/bind";
 import { Image, Input, Button, ConfigProvider, Dropdown } from "antd";
@@ -12,47 +11,58 @@ import {
 import styles from "./Header.module.scss";
 import logo from "../../assets/images/logo.png";
 import { useSelector } from "react-redux";
+import * as UserServices from "../../services/UserSevice";
+import { useDispatch } from "react-redux";
+import { resetUser } from "../../redux/slides/userSlice";
+import { useState } from "react";
+import Loading from "../../components/Loading/Loading";
 
 const cx = classNames.bind(styles);
 const { Search } = Input;
 
-// data config
-const items = [
-  {
-    key: "1",
-    label: "My Account",
-  },
-  {
-    type: "divider",
-  },
-  {
-    key: "2",
-    label: "Profile",
-    extra: "⌘P",
-  },
-  {
-    key: "3",
-    label: "Đơn hàng của tôi",
-    extra: "⌘B",
-  },
-  {
-    key: "4",
-    label: "Settings",
-    icon: <SettingOutlined />,
-    extra: "⌘S",
-  },
-];
-
 const Header = () => {
   // state
+  const [loading, setLoading] = useState(false);
   const user = useSelector((state) => state.user);
   let navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // handle
 
   const handleNavigateLogin = () => {
     navigate("/sign-in");
   };
+
+  const handleLogout = async () => {
+    setLoading(true);
+    await UserServices.logoutUser();
+    dispatch(resetUser());
+    localStorage.removeItem("access_token");
+    setLoading(false);
+  };
+
+  const items = [
+    {
+      key: "1",
+      label: <span>Cài đặt</span>,
+      icon: <SettingOutlined />,
+    },
+    {
+      type: "divider",
+    },
+    {
+      key: "2",
+      label: <span>Thông tin người dùng</span>,
+    },
+    {
+      key: "3",
+      label: <span>Đơn hàng của tôi</span>,
+    },
+    {
+      key: "4",
+      label: <span onClick={handleLogout}>Đăng xuất</span>,
+    },
+  ];
 
   return (
     <ConfigProvider
@@ -102,41 +112,43 @@ const Header = () => {
             <ShoppingOutlined className={cx("icon")} />
             <span className={cx("count")}>0</span>
           </div>
-          <div className={cx("account")}>
-            {user.name || user.email ? (
-              <Dropdown
-                menu={{
-                  items,
-                }}
-              >
-                <a onClick={(e) => e.preventDefault()}>
-                  <div className={cx("avatar-wrapper")}>
-                    <Image
-                      src="https://cdn-icons-png.flaticon.com/512/219/219983.png"
-                      width={28}
-                      height={28}
-                      className={cx("avatar")}
-                      preview={false}
-                    />
-                    <div>
-                      <span>{user.name || user.email}</span> <DownOutlined />
+          <Loading isLoading={loading}>
+            <div className={cx("account")}>
+              {user.name || user.email ? (
+                <Dropdown
+                  menu={{
+                    items,
+                  }}
+                >
+                  <a onClick={(e) => e.preventDefault()}>
+                    <div className={cx("avatar-wrapper")}>
+                      <Image
+                        src="https://cdn-icons-png.flaticon.com/512/219/219983.png"
+                        width={28}
+                        height={28}
+                        className={cx("avatar")}
+                        preview={false}
+                      />
+                      <div>
+                        <span>{user.name || user.email}</span> <DownOutlined />
+                      </div>
                     </div>
+                  </a>
+                </Dropdown>
+              ) : (
+                <div
+                  onClick={handleNavigateLogin}
+                  className={cx("login-wrapper")}
+                >
+                  <UserOutlined className={cx("icon")} />
+                  <div>
+                    <div>Đăng ký</div>
+                    <div>Đăng nhập</div>
                   </div>
-                </a>
-              </Dropdown>
-            ) : (
-              <div
-                onClick={handleNavigateLogin}
-                className={cx("login-wrapper")}
-              >
-                <UserOutlined className={cx("icon")} />
-                <div>
-                  <div>Đăng ký</div>
-                  <div>Đăng nhập</div>
                 </div>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          </Loading>
         </div>
       </header>
     </ConfigProvider>
