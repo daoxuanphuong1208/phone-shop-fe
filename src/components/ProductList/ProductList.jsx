@@ -6,7 +6,7 @@ import CardProduct from "../CardProduct/CardProduct";
 const cx = classNames.bind(styles);
 
 const ProductList = (props) => {
-  const { col, gap } = props;
+  const { col, gap, products } = props;
   return (
     <div
       style={{
@@ -16,16 +16,10 @@ const ProductList = (props) => {
       }}
       className={cx("wrapper")}
     >
-      <CardProduct />
-      <CardProduct />
-      <CardProduct />
-      <CardProduct />
-      <CardProduct />
-      <CardProduct />
-      <CardProduct />
-      <CardProduct />
-      <CardProduct />
-      <CardProduct />
+      {products &&
+        products.map((product, index) => (
+          <CardProduct key={index} product={product} />
+        ))}
     </div>
   );
 };

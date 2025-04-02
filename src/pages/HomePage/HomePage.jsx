@@ -13,9 +13,28 @@ import service_3 from "../../assets/images/service_3.png";
 import service_4 from "../../assets/images/service_4.png";
 import FrameProduct from "../../components/FrameProduct/FrameProduct";
 import News from "../../components/News/News";
+import * as ProductService from "../../services/ProductService";
+import { useQuery } from "@tanstack/react-query";
 
 const cx = classNames.bind(styles);
 const HomePage = () => {
+  const fetchAllProduct = async () => {
+    let storeData = localStorage.getItem("access_token");
+    let res;
+    if (storeData) {
+      res = await ProductService.getAllProduct(JSON.parse(storeData));
+    }
+    return res;
+  };
+
+  const { isLoading, data: products } = useQuery({
+    queryKey: ["products"],
+    queryFn: fetchAllProduct,
+    retry: 5,
+    retryDelay: 1000,
+  });
+  console.log(products);
+
   const arrImages = [slider_1, slider_2, slider_3];
   const arrService = [
     {
@@ -80,9 +99,7 @@ const HomePage = () => {
             );
           })}
         </div>
-        <FrameProduct />
-        <FrameProduct />
-        <FrameProduct />
+        <FrameProduct products={products?.data && products?.data} />
 
         <div className={cx("news-wrap")}>
           <h1 className={cx("news")}>Tin tức</h1>

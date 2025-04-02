@@ -10,6 +10,7 @@ import News from "../pages/News/News";
 import Contact from "../pages/Contact/Contact";
 import Cart from "../pages/Cart/Cart";
 import Profile from "../pages/Profile/Profile";
+import AdminPage from "../pages/AdminPage/AdminPage";
 
 import DefaultLayout from "../layouts/DefaultLayout/DefaultLayout";
 
@@ -69,6 +70,11 @@ const routes = [
     path: "/profile",
     page: Profile,
     layout: DefaultLayout,
+  },
+  {
+    path: "/system/admin",
+    page: AdminPage,
+    isPrivate: true,
   },
   {
     path: "*",

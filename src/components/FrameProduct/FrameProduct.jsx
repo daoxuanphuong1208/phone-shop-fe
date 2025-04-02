@@ -16,7 +16,7 @@ const FrameProduct = (props) => {
         </div>
       </div>
       <div className={cx("product-list")}>
-        <ProductList col={5} gap={15} />
+        <ProductList products={products} col={5} gap={15} />
       </div>
       <div className={cx("show-more")}>
         <button className={cx("btn")}>Xem thêm sản phẩm</button>
