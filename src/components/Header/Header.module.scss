@@ -38,6 +38,13 @@
   font-size: 1.4rem;
   gap: 18px;
 
+  .back-user-page {
+    cursor: pointer;
+    &:hover {
+      color: #69b1ff;
+    }
+  }
+
   .account {
     cursor: pointer;
 

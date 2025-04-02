@@ -1,0 +1,18 @@
+.wrapper {
+  display: flex;
+  gap: 20px;
+  padding-top: 15px;
+}
+
+.header {
+  background-color: rgba(255, 144, 28, 0.2);
+}
+
+.menu {
+  height: 100vh;
+  border: 1px solid #ccc;
+}
+
+.content {
+  flex: 1;
+}

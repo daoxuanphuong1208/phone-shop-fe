@@ -9,6 +9,7 @@ import {
   LogoutOutlined,
   InfoCircleOutlined,
   ProductOutlined,
+  AppstoreOutlined,
 } from "@ant-design/icons";
 import styles from "./Header.module.scss";
 import logo from "../../assets/images/logo.png";
@@ -24,7 +25,7 @@ const { Search } = Input;
 const DEFAULT_AVATAR =
   "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=170667a&w=0&k=20&c=LPUo_WZjbXXNnF6ok4uQr8I_Zj6WUVnH_FpREg21qaY=";
 
-const Header = () => {
+const Header = ({ isHiddenSearch, isHiddenCart }) => {
   // state
   const [loading, setLoading] = useState(false);
   const user = useSelector((state) => state.user);
@@ -66,11 +67,21 @@ const Header = () => {
     {
       type: "divider",
     },
-    {
-      key: "2",
-      label: <span>Đơn hàng của tôi</span>,
-      icon: <ProductOutlined />,
-    },
+    user?.isAdmin
+      ? {
+          key: "2",
+          label: (
+            <span onClick={() => navigate("/system/admin")}>
+              Quản lý hệ thống
+            </span>
+          ),
+          icon: <AppstoreOutlined />,
+        }
+      : {
+          key: "2",
+          label: <span>Đơn hàng của tôi</span>,
+          icon: <ProductOutlined />,
+        },
     {
       type: "divider",
     },
@@ -112,23 +123,31 @@ const Header = () => {
             Duy Minh <span>Mobile</span>
           </div>
         </div>
-        <div className={cx("header-search")}>
-          <Search
-            placeholder="Bạn muốn tìm gì?"
-            allowClear
-            enterButton={
-              <Button>
-                <SearchOutlined className={cx("icon")} />
-              </Button>
-            }
-            size="large"
-          />
-        </div>
-        <div className={cx("header-actions")}>
-          <div onClick={() => navigate("/cart")} className={cx("cart")}>
-            <ShoppingOutlined className={cx("icon")} />
-            <span className={cx("count")}>0</span>
+        {!isHiddenSearch && (
+          <div className={cx("header-search")}>
+            <Search
+              placeholder="Bạn muốn tìm gì?"
+              allowClear
+              enterButton={
+                <Button>
+                  <SearchOutlined className={cx("icon")} />
+                </Button>
+              }
+              size="large"
+            />
           </div>
+        )}
+        <div className={cx("header-actions")}>
+          {isHiddenCart ? (
+            <div className={cx("back-user-page")} onClick={() => navigate("/")}>
+              Về trang người dùng
+            </div>
+          ) : (
+            <div onClick={() => navigate("/cart")} className={cx("cart")}>
+              <ShoppingOutlined className={cx("icon")} />
+              <span className={cx("count")}>0</span>
+            </div>
+          )}
           <Loading isLoading={loading}>
             <div className={cx("account")}>
               {user.name || user.email ? (
