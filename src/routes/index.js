@@ -11,6 +11,7 @@ import Contact from "../pages/Contact/Contact";
 import Cart from "../pages/Cart/Cart";
 import Profile from "../pages/Profile/Profile";
 import AdminPage from "../pages/AdminPage/AdminPage";
+import ResetPassword from "../pages/ResetPassword/ResetPassword";
 
 import DefaultLayout from "../layouts/DefaultLayout/DefaultLayout";
 
@@ -75,6 +76,11 @@ const routes = [
     path: "/system/admin",
     page: AdminPage,
     isPrivate: true,
+  },
+  {
+    path: "/reset-password",
+    page: ResetPassword,
+    layout: DefaultLayout,
   },
   {
     path: "*",

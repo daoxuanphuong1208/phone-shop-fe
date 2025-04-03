@@ -58,3 +58,11 @@ export const logoutUser = async () => {
   const res = await axios.post(`${process.env.REACT_APP_API_URL}/user/logout`);
   return res.data;
 };
+
+export const resetPassword = async (data) => {
+  const res = await axios.post(
+    `${process.env.REACT_APP_API_URL}/user/reset-password`,
+    data
+  );
+  return res.data;
+};
