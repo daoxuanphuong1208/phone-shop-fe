@@ -116,17 +116,6 @@ const SignInPage = () => {
             <a href="">Quên mật khẩu?</a>
             <a onClick={handleNavigateSignUp}>Đăng ký tại đây</a>
           </div>
-          <div className={cx("footer-title")}>Hoặc đăng nhập bằng</div>
-          <div className={cx("social-login")}>
-            <div className={cx("facebook")}>
-              <FacebookFilled />
-              <span>Facebook</span>
-            </div>
-            <div className={cx("google")}>
-              <GooglePlusSquareFilled />
-              <span>Google</span>
-            </div>
-          </div>
         </Form>
       </div>
     </div>

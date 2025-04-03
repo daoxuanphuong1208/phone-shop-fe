@@ -25,36 +25,6 @@
   margin-bottom: 20px;
 }
 
-.social-login {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-}
-
-.facebook,
-.google {
-  min-width: 120px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  padding: 10px 20px;
-  border-radius: 5px;
-  font-size: 1.4rem;
-  border: none;
-  cursor: pointer;
-  color: var(--textColorWhite);
-}
-
-.google {
-  background-color: #e14b33;
-}
-
-.facebook {
-  background-color: #3b5998;
-}
-
 .forgot-password {
   display: flex;
   justify-content: space-between;

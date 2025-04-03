@@ -21,7 +21,7 @@ const SignUpPage = () => {
   useEffect(() => {
     if (data?.status === "OK") {
       messageApi.success("Đăng ký thành công");
-      setTimeout(() => handleNavigateSignIn, 1500);
+      setTimeout(() => handleNavigateSignIn(), 1500);
     }
   }, [isSuccess]);
 
@@ -77,17 +77,6 @@ const SignUpPage = () => {
             <Input placeholder="Email" />
           </Form.Item>
           <Form.Item
-            name="phone"
-            rules={[
-              {
-                required: true,
-                message: "Vui lòng nhập số diện thoại!",
-              },
-            ]}
-          >
-            <Input placeholder="Số diện thoại" />
-          </Form.Item>
-          <Form.Item
             name="password"
             rules={[
               {
@@ -97,17 +86,6 @@ const SignUpPage = () => {
             ]}
           >
             <Input type="password" placeholder="Mật khẩu" />
-          </Form.Item>
-          <Form.Item
-            name="confirmPassword"
-            rules={[
-              {
-                required: true,
-                message: "Vui lòng nhập xác nhận mật khẩu!",
-              },
-            ]}
-          >
-            <Input type="password" placeholder="Xác nhận mật khẩu" />
           </Form.Item>
           <div className={cx("error-message")}>
             {data?.status === "ERROR" ? data?.message : ""}
@@ -129,17 +107,6 @@ const SignUpPage = () => {
               </Loading>
             </ConfigProvider>
           </Form.Item>
-          <div className={cx("footer-title")}>Hoặc đăng ký bằng</div>
-          <div className={cx("social-register")}>
-            <div className={cx("facebook")}>
-              <FacebookFilled />
-              <span>Facebook</span>
-            </div>
-            <div className={cx("google")}>
-              <GooglePlusSquareFilled />
-              <span>Google</span>
-            </div>
-          </div>
         </Form>
       </div>
     </div>
