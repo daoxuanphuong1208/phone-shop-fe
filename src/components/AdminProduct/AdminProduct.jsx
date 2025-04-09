@@ -8,6 +8,7 @@ import {
   Popconfirm,
   Space,
   Image,
+  Select,
   Upload,
 } from "antd";
 import { PlusOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
@@ -18,6 +19,7 @@ import Table from "../../components/Table/Table";
 import { useState, useEffect, useRef } from "react";
 import Loading from "../../components/Loading/Loading";
 import * as ProductService from "../../services/ProductService";
+import * as CategoriesService from "../../services/CategoriesService";
 import { useMutationHooks } from "../../hooks/useMutationHooks";
 
 const cx = classNames.bind(styles);
@@ -33,6 +35,7 @@ const AdminProduct = () => {
   const deletingIdRef = useRef(null);
   const [imageBase64, setImageBase64] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [categories, setCategories] = useState([]);
 
   const createMutation = useMutationHooks((data) =>
     ProductService.createProduct(data)
@@ -54,6 +57,7 @@ const AdminProduct = () => {
 
   useEffect(() => {
     fetchProducts();
+    fetchCategories();
   }, []);
 
   useEffect(() => {
@@ -86,7 +90,7 @@ const AdminProduct = () => {
   }, [isDeleteSuccess]);
 
   const fetchProducts = async () => {
-    setLoading(true); // Bắt đầu loading
+    setLoading(true);
     try {
       const token = JSON.parse(localStorage.getItem("access_token"));
       const res = await ProductService.getAllProduct(token);
@@ -99,6 +103,15 @@ const AdminProduct = () => {
       messageApi.error("Lỗi khi tải sản phẩm");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchCategories = async () => {
+    try {
+      const res = await CategoriesService.getAllCategories();
+      setCategories(res?.data || []);
+    } catch (err) {
+      console.error("Lỗi lấy danh sách danh mục", err);
     }
   };
 
@@ -235,7 +248,7 @@ const AdminProduct = () => {
           okText={editMode ? "Cập nhật" : "Thêm sản phẩm"}
           cancelText="Hủy bỏ"
         >
-          <Form form={form} name="addProduct">
+          <Form form={form} name="form-product">
             <Form.Item
               name="name"
               rules={[{ required: true, message: "Vui lòng nhập tên!" }]}
@@ -262,10 +275,16 @@ const AdminProduct = () => {
               )}
             </Form.Item>
             <Form.Item
-              name="type"
-              rules={[{ required: true, message: "Vui lòng nhập loại!" }]}
+              name="categoryId"
+              rules={[{ required: true, message: "Vui lòng chọn danh mục!" }]}
             >
-              <Input placeholder="Danh mục" />
+              <Select placeholder="Danh mục">
+                {categories.map((item) => (
+                  <Select.Option key={item._id} value={item._id}>
+                    {item.name}
+                  </Select.Option>
+                ))}
+              </Select>
             </Form.Item>
             <Form.Item
               name="price"

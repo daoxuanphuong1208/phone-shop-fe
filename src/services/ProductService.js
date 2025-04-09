@@ -1,13 +1,8 @@
 import axios from "axios";
 
-export const getAllProduct = async (access_token) => {
+export const getAllProduct = async () => {
   const res = await axios.get(
-    `${process.env.REACT_APP_API_URL}/product/getAll`,
-    {
-      headers: {
-        token: `Beare ${access_token}`,
-      },
-    }
+    `${process.env.REACT_APP_API_URL}/product/getAll`
   );
   return res.data;
 };
