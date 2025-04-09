@@ -1,111 +1,306 @@
-import { Button, Divider, Form, Modal, Input, message } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import {
+  Button,
+  Divider,
+  Form,
+  Modal,
+  Input,
+  message,
+  Popconfirm,
+  Space,
+  Image,
+  Upload,
+} from "antd";
+import { PlusOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import classNames from "classnames/bind";
+import { getBase64 } from "../../utils";
 import styles from "./AdminProduct.module.scss";
 import Table from "../../components/Table/Table";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import Loading from "../../components/Loading/Loading";
 import * as ProductService from "../../services/ProductService";
+import { useMutationHooks } from "../../hooks/useMutationHooks";
 
 const cx = classNames.bind(styles);
 
-const columns = [
-  { title: "Tên", dataIndex: "name" },
-  { title: "Loại", dataIndex: "type" },
-  { title: "Giá", dataIndex: "price" },
-];
-
 const AdminProduct = () => {
+  const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [editingProduct, setEditingProduct] = useState(null);
   const [products, setProducts] = useState([]);
   const [form] = Form.useForm();
   const [messageApi, contextHolder] = message.useMessage();
+  const deletingIdRef = useRef(null);
+  const [imageBase64, setImageBase64] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+
+  const createMutation = useMutationHooks((data) =>
+    ProductService.createProduct(data)
+  );
+  const updateMutation = useMutationHooks((data) =>
+    ProductService.updateProduct(data.id, data.token, data.payload)
+  );
+  const deleteMutation = useMutationHooks(({ id, token }) =>
+    ProductService.deleteProduct(id, token)
+  );
+
+  const {
+    data: createdData,
+    isSuccess: isCreateSuccess,
+    isPending: isCreating,
+  } = createMutation;
+  const { data: updatedData, isSuccess: isUpdateSuccess } = updateMutation;
+  const { data: deletedData, isSuccess: isDeleteSuccess } = deleteMutation;
 
   useEffect(() => {
     fetchProducts();
   }, []);
 
-  const fetchProducts = async () => {
-    let storeData = localStorage.getItem("access_token");
-    let res;
-    if (storeData) {
-      res = await ProductService.getAllProduct(JSON.parse(storeData));
-      res.data.map((item) => {
-        return {
-          key: item._id,
-          ...item,
-        };
-      });
-      setProducts(res.data);
+  useEffect(() => {
+    if (isCreateSuccess && createdData?.status === "OK") {
+      messageApi.success("Thêm sản phẩm thành công!");
+      setProducts((prev) => [...prev, createdData.data]);
+      handleCancel();
     }
+  }, [isCreateSuccess]);
 
-    return res;
+  useEffect(() => {
+    if (isUpdateSuccess && updatedData?.status === "OK") {
+      messageApi.success("Cập nhật sản phẩm thành công!");
+      setProducts((prev) =>
+        prev.map((item) =>
+          item._id === updatedData.data._id ? updatedData.data : item
+        )
+      );
+      handleCancel();
+    }
+  }, [isUpdateSuccess]);
+
+  useEffect(() => {
+    if (isDeleteSuccess && deletedData?.status === "OK") {
+      messageApi.success("Xóa sản phẩm thành công!");
+      setProducts((prev) =>
+        prev.filter((item) => item._id !== deletingIdRef.current)
+      );
+    }
+  }, [isDeleteSuccess]);
+
+  const fetchProducts = async () => {
+    setLoading(true); // Bắt đầu loading
+    try {
+      const token = JSON.parse(localStorage.getItem("access_token"));
+      const res = await ProductService.getAllProduct(token);
+      const productsWithKey = res.data.map((item) => ({
+        key: item._id,
+        ...item,
+      }));
+      setProducts(productsWithKey);
+    } catch (error) {
+      messageApi.error("Lỗi khi tải sản phẩm");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const showModal = () => setIsModalOpen(true);
+  const showModal = () => {
+    setIsModalOpen(true);
+    setEditMode(false);
+    form.resetFields();
+
+    if (imagePreview) {
+      URL.revokeObjectURL(imagePreview);
+      setImagePreview(null);
+    }
+    setImageBase64(null);
+  };
+
   const handleCancel = () => {
     setIsModalOpen(false);
+    setEditMode(false);
+    setEditingProduct(null);
     form.resetFields();
   };
 
   const handleAddProduct = async () => {
     try {
       const values = await form.validateFields();
-      const response = await fetch("https://api.example.com/products", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
-      });
-
-      const result = await response.json();
-      if (result.status === "OK") {
-        messageApi.success("Thêm sản phẩm thành công!");
-        setProducts([...products, result.product]);
-        handleCancel();
-      } else {
-        messageApi.error("Lỗi khi thêm sản phẩm!");
-      }
+      const payload = { ...values, image: imageBase64 };
+      createMutation.mutate(payload);
     } catch (error) {
-      console.error("Lỗi:", error);
+      console.error("Lỗi validate:", error);
     }
   };
 
+  const handleEditProduct = async () => {
+    try {
+      const values = await form.validateFields();
+      const token = JSON.parse(localStorage.getItem("access_token"));
+      if (editingProduct) {
+        const payload = {
+          ...values,
+          image: imageBase64 || editingProduct.image, // nếu không chọn ảnh mới thì giữ ảnh cũ
+        };
+        updateMutation.mutate({
+          id: editingProduct._id,
+          token,
+          payload,
+        });
+      }
+    } catch (error) {
+      console.error("Lỗi validate:", error);
+    }
+  };
+
+  const handleEdit = (record) => {
+    setEditingProduct(record);
+    setEditMode(true);
+    setIsModalOpen(true);
+    setImagePreview(record.image);
+    setImageBase64(null);
+    form.setFieldsValue(record);
+  };
+
+  const handleDelete = (id) => {
+    const token = JSON.parse(localStorage.getItem("access_token"));
+    deletingIdRef.current = id;
+    deleteMutation.mutate({ id, token });
+  };
+
+  const handleChangeImage = async ({ fileList }) => {
+    const file = fileList[0];
+    if (file) {
+      const objectUrl = URL.createObjectURL(file.originFileObj);
+      setImagePreview(objectUrl);
+      const base64 = await getBase64(file.originFileObj);
+      setImageBase64(base64);
+    }
+  };
+
+  const columns = [
+    {
+      title: "Ảnh",
+      dataIndex: "image",
+      render: (url) => (
+        <Image
+          className={cx("image-product")}
+          alt="product"
+          src={url}
+          width={100}
+          height={100}
+        />
+      ),
+      sorter: (a, b) => a.name.length - b.name.length,
+    },
+    { title: "Tên", dataIndex: "name" },
+    { title: "Danh mục", dataIndex: "type" },
+    { title: "Giá", dataIndex: "price" },
+    { title: "Số lượng", dataIndex: "countInStock" },
+    { title: "Sao", dataIndex: "rating" },
+    { title: "Mô tả", dataIndex: "description" },
+    {
+      title: "Hoạt động",
+      dataIndex: "action",
+      render: (_, record) => (
+        <Space size="middle">
+          <Popconfirm
+            title="Bạn chắc chắn muốn xóa?"
+            onConfirm={() => handleDelete(record._id)}
+            okText="Đồng ý"
+            cancelText="Hủy bỏ"
+          >
+            <Button danger icon={<DeleteOutlined />} />
+          </Popconfirm>
+          <Button icon={<EditOutlined />} onClick={() => handleEdit(record)} />
+        </Space>
+      ),
+    },
+  ];
+
   return (
-    <div>
-      {contextHolder}
-      <div className={cx("header")}>
-        <h2>Danh sách sản phẩm</h2>
-        <Button type="primary" icon={<PlusOutlined />} onClick={showModal}>
-          Thêm sản phẩm
-        </Button>
+    <Loading isLoading={loading}>
+      <div>
+        {contextHolder}
+        <div className={cx("header")}>
+          <h2>Danh sách sản phẩm</h2>
+          <Button type="primary" icon={<PlusOutlined />} onClick={showModal}>
+            Thêm sản phẩm
+          </Button>
+        </div>
+        <Modal
+          title={editMode ? "Chỉnh sửa sản phẩm" : "Thêm sản phẩm"}
+          open={isModalOpen}
+          onOk={editMode ? handleEditProduct : handleAddProduct}
+          onCancel={handleCancel}
+          confirmLoading={isCreating}
+          okText={editMode ? "Cập nhật" : "Thêm sản phẩm"}
+          cancelText="Hủy bỏ"
+        >
+          <Form form={form} name="addProduct">
+            <Form.Item
+              name="name"
+              rules={[{ required: true, message: "Vui lòng nhập tên!" }]}
+            >
+              <Input placeholder="Tên sản phẩm" />
+            </Form.Item>
+            <Form.Item label="Ảnh sản phẩm">
+              <Upload
+                accept="image/*"
+                showUploadList={false}
+                onChange={handleChangeImage}
+                beforeUpload={() => false}
+                maxCount={1}
+              >
+                <Button icon={<PlusOutlined />}>Chọn ảnh</Button>
+              </Upload>
+              {imagePreview && (
+                <Image
+                  src={imagePreview}
+                  alt="product"
+                  width={100}
+                  height={100}
+                />
+              )}
+            </Form.Item>
+            <Form.Item
+              name="type"
+              rules={[{ required: true, message: "Vui lòng nhập loại!" }]}
+            >
+              <Input placeholder="Danh mục" />
+            </Form.Item>
+            <Form.Item
+              name="price"
+              rules={[{ required: true, message: "Vui lòng nhập giá!" }]}
+            >
+              <Input placeholder="Giá sản phẩm" />
+            </Form.Item>
+            <Form.Item
+              name="countInStock"
+              rules={[{ required: true, message: "Vui lòng nhập số lượng!" }]}
+            >
+              <Input placeholder="Số lượng" />
+            </Form.Item>
+            <Form.Item
+              name="rating"
+              rules={[{ required: true, message: "Vui lòng nhập sao!" }]}
+            >
+              <Input placeholder="Sao" />
+            </Form.Item>
+            <Form.Item
+              name="description"
+              rules={[{ required: true, message: "Vui lòng nhập mô tả!" }]}
+            >
+              <Input placeholder="Mô tả" />
+            </Form.Item>
+          </Form>
+        </Modal>
+        <Divider />
+        {products.length > 0 ? (
+          <Table columns={columns} data={products} pageSize={5} />
+        ) : (
+          <div>Không có dữ liệu</div>
+        )}
       </div>
-      <Modal
-        title="Thêm sản phẩm"
-        open={isModalOpen}
-        onOk={handleAddProduct}
-        onCancel={handleCancel}
-      >
-        <Form form={form} name="addProduct">
-          <Form.Item
-            name="name"
-            rules={[{ required: true, message: "Vui lòng nhập tên sản phẩm!" }]}
-          >
-            <Input placeholder="Tên sản phẩm" />
-          </Form.Item>
-          <Form.Item
-            name="price"
-            rules={[{ required: true, message: "Vui lòng nhập giá sản phẩm!" }]}
-          >
-            <Input placeholder="Giá sản phẩm" />
-          </Form.Item>
-        </Form>
-      </Modal>
-      <Divider />
-      {products.length > 0 ? (
-        <Table columns={columns} data={products} />
-      ) : (
-        <div>Không có dữ liệu</div>
-      )}
-    </div>
+    </Loading>
   );
 };
 
