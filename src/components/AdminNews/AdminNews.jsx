@@ -50,7 +50,7 @@ const data = [
 const AdminNews = () => {
   return (
     <div>
-      <div>Tin tức</div>
+      <h2>Tin tức</h2>
       <Divider />
 
       {data ? (

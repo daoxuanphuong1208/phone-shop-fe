@@ -50,7 +50,7 @@ const data = [
 const AdminCategories = () => {
   return (
     <div>
-      <div>Danh mục</div>
+      <h2>Danh mục</h2>
       <Divider />
 
       {data ? (

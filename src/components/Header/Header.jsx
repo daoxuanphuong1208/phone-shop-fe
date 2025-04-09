@@ -140,7 +140,7 @@ const Header = ({ isHiddenSearch, isHiddenCart }) => {
         <div className={cx("header-actions")}>
           {isHiddenCart ? (
             <div className={cx("back-user-page")} onClick={() => navigate("/")}>
-              Về trang người dùng
+              Về trang khách hàng
             </div>
           ) : (
             <div onClick={() => navigate("/cart")} className={cx("cart")}>

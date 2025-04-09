@@ -1,6 +1,6 @@
 import { Divider } from "antd";
 import classNames from "classnames/bind";
-import styles from "./AdminOrder.module.scss";
+import styles from "./AdminContact.module.scss";
 import Table from "../../components/Table/Table";
 
 const cx = classNames.bind(styles);
@@ -47,10 +47,10 @@ const data = [
   },
 ];
 
-const AdminOrder = () => {
+const AdminContact = () => {
   return (
     <div>
-      <h2>Đơn hàng</h2>
+      <div>Liên hệ</div>
       <Divider />
 
       {data ? (
@@ -62,4 +62,4 @@ const AdminOrder = () => {
   );
 };
 
-export default AdminOrder;
+export default AdminContact;

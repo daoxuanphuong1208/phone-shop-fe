@@ -6,6 +6,7 @@ import {
   ContainerOutlined,
   AreaChartOutlined,
   SnippetsOutlined,
+  ContactsOutlined,
 } from "@ant-design/icons";
 import { Menu } from "antd";
 import classNames from "classnames/bind";
@@ -18,6 +19,8 @@ import AdminSlider from "../../components/AdminSlider/AdminSlider";
 import AdminNews from "../../components/AdminNews/AdminNews";
 import AdminCategories from "../../components/AdminCategories/AdminCategories";
 import AdminStatistical from "../../components/AdminStatistical/AdminStatistical";
+import AdminContact from "../../components/AdminContact/AdminContact";
+
 import { useState } from "react";
 
 const cx = classNames.bind(styles);
@@ -76,6 +79,11 @@ const items = [
     label: "Quản lý slider",
     icon: <SlidersOutlined />,
   },
+  {
+    key: "8",
+    label: "Quản lý liên hệ",
+    icon: <ContactsOutlined />,
+  },
 ];
 
 const AdminPage = () => {
@@ -97,6 +105,8 @@ const AdminPage = () => {
         return <AdminNews />;
       case "7":
         return <AdminSlider />;
+      case "8":
+        return <AdminContact />;
       default:
         return <>Không có dữ liệu</>;
     }
@@ -107,9 +117,7 @@ const AdminPage = () => {
 
   return (
     <>
-      <div className={cx("header")}>
-        <Header isHiddenSearch isHiddenCart />
-      </div>
+      <Header isHiddenSearch isHiddenCart />
       <div className={cx("wrapper", "container")}>
         <div className={cx("menu")}>
           <Menu

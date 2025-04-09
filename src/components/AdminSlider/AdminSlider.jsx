@@ -50,7 +50,7 @@ const data = [
 const AdminSlider = () => {
   return (
     <div>
-      <div>Slider</div>
+      <h2>Slider</h2>
       <Divider />
 
       {data ? (
