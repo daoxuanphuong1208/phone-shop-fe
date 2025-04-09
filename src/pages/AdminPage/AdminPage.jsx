@@ -3,7 +3,9 @@ import {
   UserOutlined,
   ShoppingCartOutlined,
   SlidersOutlined,
-  HomeOutlined,
+  ContainerOutlined,
+  AreaChartOutlined,
+  SnippetsOutlined,
 } from "@ant-design/icons";
 import { Menu } from "antd";
 import classNames from "classnames/bind";
@@ -13,6 +15,9 @@ import AdminUser from "../../components/AdminUser/AdminUser";
 import AdminProduct from "../../components/AdminProduct/AdminProduct";
 import AdminOrder from "../../components/AdminOrder/AdminOrder";
 import AdminSlider from "../../components/AdminSlider/AdminSlider";
+import AdminNews from "../../components/AdminNews/AdminNews";
+import AdminCategories from "../../components/AdminCategories/AdminCategories";
+import AdminStatistical from "../../components/AdminStatistical/AdminStatistical";
 import { useState } from "react";
 
 const cx = classNames.bind(styles);
@@ -20,15 +25,15 @@ const cx = classNames.bind(styles);
 const items = [
   {
     key: "1",
-    label: "Trang chủ",
-    icon: <HomeOutlined />,
+    label: "Thống kê",
+    icon: <AreaChartOutlined />,
   },
   {
     type: "divider",
   },
   {
     key: "2",
-    label: "Người dùng",
+    label: "Quản lý thành viên",
     icon: <UserOutlined />,
   },
   {
@@ -36,7 +41,7 @@ const items = [
   },
   {
     key: "3",
-    label: "Sản phẩm",
+    label: "Quản lý sản phẩm",
     icon: <ProductOutlined />,
   },
   {
@@ -44,12 +49,31 @@ const items = [
   },
   {
     key: "4",
-    label: "Đơn hàng",
+    label: "Quản lý đơn hàng",
     icon: <ShoppingCartOutlined />,
   },
   {
+    type: "divider",
+  },
+  {
     key: "5",
-    label: "Slider",
+    label: "Quản lý danh mục",
+    icon: <SnippetsOutlined />,
+  },
+  {
+    type: "divider",
+  },
+  {
+    key: "6",
+    label: "Quản lý tin tức",
+    icon: <ContainerOutlined />,
+  },
+  {
+    type: "divider",
+  },
+  {
+    key: "7",
+    label: "Quản lý slider",
     icon: <SlidersOutlined />,
   },
 ];
@@ -60,7 +84,7 @@ const AdminPage = () => {
   const renderComponent = (key) => {
     switch (key) {
       case "1":
-        return <AdminUser />;
+        return <AdminStatistical />;
       case "2":
         return <AdminUser />;
       case "3":
@@ -68,9 +92,13 @@ const AdminPage = () => {
       case "4":
         return <AdminOrder />;
       case "5":
+        return <AdminCategories />;
+      case "6":
+        return <AdminNews />;
+      case "7":
         return <AdminSlider />;
       default:
-        return <>Không có nội dung</>;
+        return <>Không có dữ liệu</>;
     }
   };
   const onClick = (e) => {

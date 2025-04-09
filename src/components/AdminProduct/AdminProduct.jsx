@@ -221,7 +221,7 @@ const AdminProduct = () => {
       <div>
         {contextHolder}
         <div className={cx("header")}>
-          <h2>Danh sách sản phẩm</h2>
+          <h2>Sản phẩm</h2>
           <Button type="primary" icon={<PlusOutlined />} onClick={showModal}>
             Thêm sản phẩm
           </Button>

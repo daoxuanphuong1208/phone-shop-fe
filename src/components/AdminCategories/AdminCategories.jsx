@@ -1,6 +1,6 @@
 import { Divider } from "antd";
 import classNames from "classnames/bind";
-import styles from "./AdminUser.module.scss";
+import styles from "./AdminCategories.module.scss";
 import Table from "../../components/Table/Table";
 
 const cx = classNames.bind(styles);
@@ -47,10 +47,10 @@ const data = [
   },
 ];
 
-const AdminUser = () => {
+const AdminCategories = () => {
   return (
     <div>
-      <h2>Thành viên</h2>
+      <div>Danh mục</div>
       <Divider />
 
       {data ? (
@@ -62,4 +62,4 @@ const AdminUser = () => {
   );
 };
 
-export default AdminUser;
+export default AdminCategories;
