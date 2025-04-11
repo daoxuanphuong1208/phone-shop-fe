@@ -28,6 +28,11 @@
 .forgot-password {
   display: flex;
   justify-content: space-between;
+  margin-bottom: 10px;
+
+  span {
+    cursor: pointer;
+  }
 }
 
 .error-message {

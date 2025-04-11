@@ -10,6 +10,9 @@ import Loading from "../../components/Loading/Loading";
 import { updateUser } from "../../redux/slides/userSlice";
 import { UploadOutlined } from "@ant-design/icons";
 import { getBase64 } from "../../utils";
+import Header from "../../components/Header/Header";
+import Navigation from "../../components/Navigation/Navigation";
+import Footer from "../../components/Footer/Footer";
 
 const cx = classNames.bind(styles);
 const DEFAULT_AVATAR =
@@ -69,6 +72,8 @@ const Profile = () => {
 
   return (
     <>
+      {user?.isAdmin ? <Header isHiddenSearch isHiddenCart /> : <Header />}
+      {user?.isAdmin ? null : <Navigation />}
       {contextHolder}
       <Breadcrumb />
       <div className={cx("wrapper")}>
@@ -124,6 +129,7 @@ const Profile = () => {
           </div>
         </Loading>
       </div>
+      {user?.isAdmin ? null : <Footer />}
     </>
   );
 };

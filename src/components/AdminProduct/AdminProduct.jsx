@@ -92,8 +92,7 @@ const AdminProduct = () => {
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const token = JSON.parse(localStorage.getItem("access_token"));
-      const res = await ProductService.getAllProduct(token);
+      const res = await ProductService.getAllProduct();
       const productsWithKey = res.data.map((item) => ({
         key: item._id,
         ...item,

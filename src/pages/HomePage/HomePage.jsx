@@ -19,11 +19,7 @@ import { useQuery } from "@tanstack/react-query";
 const cx = classNames.bind(styles);
 const HomePage = () => {
   const fetchAllProduct = async () => {
-    let storeData = localStorage.getItem("access_token");
-    let res;
-    if (storeData) {
-      res = await ProductService.getAllProduct(JSON.parse(storeData));
-    }
+    const res = await ProductService.getAllProduct();
     return res;
   };
 
@@ -33,7 +29,6 @@ const HomePage = () => {
     retry: 5,
     retryDelay: 1000,
   });
-  console.log(products);
 
   const arrImages = [slider_1, slider_2, slider_3];
   const arrService = [

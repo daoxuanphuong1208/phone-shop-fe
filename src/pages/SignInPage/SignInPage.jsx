@@ -6,7 +6,7 @@ import { useNavigate } from "react-router";
 import * as UserServices from "../../services/UserSevice";
 import { useMutationHooks } from "../../hooks/useMutationHooks";
 import Loading from "../../components/Loading/Loading";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { useDispatch } from "react-redux";
 import { updateUser } from "../../redux/slides/userSlice";
@@ -15,9 +15,18 @@ const cx = classNames.bind(styles);
 
 const SignInPage = () => {
   let navigate = useNavigate();
-  const mutation = useMutationHooks((data) => UserServices.loginUser(data));
+  const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
+  const mutation = useMutationHooks((data) => UserServices.loginUser(data));
   const { data, isPending, isSuccess } = mutation;
+  const mutationForgot = useMutationHooks((data) =>
+    UserServices.forgotPassword(data)
+  );
+  const {
+    data: dataForgot,
+    isPending: isPendingForgot,
+    isSuccess: isSuccessForgot,
+  } = mutationForgot;
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -29,10 +38,21 @@ const SignInPage = () => {
         if (decoded?.id) {
           handleGetDetailsUser(decoded?.id, data?.access_token);
         }
+        if (decoded?.isAdmin) {
+          setTimeout(() => navigate("/system/admin"), 1000);
+        } else {
+          setTimeout(() => navigate("/"), 1000);
+        }
       }
-      setTimeout(() => navigate("/"), 1500);
     }
   }, [isSuccess]);
+
+  useEffect(() => {
+    if (dataForgot?.status === "OK") {
+      messageApi.success(dataForgot?.message);
+      setIsForgotPassword(false);
+    }
+  }, [isSuccessForgot]);
 
   //handle
 
@@ -49,8 +69,14 @@ const SignInPage = () => {
     navigate("/sign-up");
   };
 
-  const onFinish = (values) => {
+  const handleSignin = (values) => {
     mutation.mutate({
+      ...values,
+    });
+  };
+
+  const handleForgotPassword = (values) => {
+    mutationForgot.mutate({
       ...values,
     });
   };
@@ -68,7 +94,7 @@ const SignInPage = () => {
           style={{
             maxWidth: 360,
           }}
-          onFinish={onFinish}
+          onFinish={handleSignin}
         >
           <Form.Item
             name="email"
@@ -112,11 +138,57 @@ const SignInPage = () => {
               </Loading>
             </ConfigProvider>
           </Form.Item>
-          <div className={cx("forgot-password")}>
-            <a href="">Quên mật khẩu?</a>
-            <a onClick={handleNavigateSignUp}>Đăng ký tại đây</a>
-          </div>
         </Form>
+        <div className={cx("forgot-password")}>
+          <span onClick={() => setIsForgotPassword(!isForgotPassword)}>
+            Quên mật khẩu?
+          </span>
+          <span onClick={handleNavigateSignUp}>Đăng ký tại đây</span>
+        </div>
+        {isForgotPassword && (
+          <Form
+            name="forgot-password"
+            initialValues={{
+              remember: true,
+            }}
+            style={{
+              maxWidth: 360,
+            }}
+            onFinish={handleForgotPassword}
+          >
+            <Form.Item
+              name="email"
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng nhập email!",
+                },
+              ]}
+            >
+              <Input placeholder="Email" />
+            </Form.Item>
+            <Form.Item>
+              <div className={cx("error-message")}>
+                {data?.status === "ERROR" ? data?.message : ""}
+              </div>
+              <ConfigProvider
+                theme={{
+                  token: {
+                    colorPrimary: "#503eb6",
+                    borderRadius: 2,
+                    colorBgContainer: "#f6ffed",
+                  },
+                }}
+              >
+                <Loading isLoading={isPending}>
+                  <Button block type="primary" htmlType="submit">
+                    Lấy lại mật khẩu
+                  </Button>
+                </Loading>
+              </ConfigProvider>
+            </Form.Item>
+          </Form>
+        )}
       </div>
     </div>
   );

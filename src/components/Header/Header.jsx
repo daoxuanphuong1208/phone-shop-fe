@@ -1,6 +1,14 @@
 import { useNavigate } from "react-router";
 import classNames from "classnames/bind";
-import { Image, Input, Button, ConfigProvider, Dropdown } from "antd";
+import {
+  Image,
+  Input,
+  Button,
+  ConfigProvider,
+  Dropdown,
+  AutoComplete,
+  message,
+} from "antd";
 import {
   UserOutlined,
   ShoppingOutlined,
@@ -13,25 +21,30 @@ import {
 } from "@ant-design/icons";
 import styles from "./Header.module.scss";
 import logo from "../../assets/images/logo.png";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import * as UserServices from "../../services/UserSevice";
-import { useDispatch } from "react-redux";
+import * as ProductService from "../../services/ProductService";
 import { resetUser } from "../../redux/slides/userSlice";
+import { searchProduct } from "../../redux/slides/productSlice";
 import { useEffect, useState } from "react";
 import Loading from "../../components/Loading/Loading";
+import { useDebounceHooks } from "../../hooks/useDebounce";
 
 const cx = classNames.bind(styles);
-const { Search } = Input;
+
 const DEFAULT_AVATAR =
   "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=170667a&w=0&k=20&c=LPUo_WZjbXXNnF6ok4uQr8I_Zj6WUVnH_FpREg21qaY=";
 
 const Header = ({ isHiddenSearch, isHiddenCart }) => {
-  // state
+  const [messageApi, contextHolder] = message.useMessage();
   const [loading, setLoading] = useState(false);
+  const [search, setSearch] = useState("");
+  const [options, setOptions] = useState([]);
   const user = useSelector((state) => state.user);
-  let navigate = useNavigate();
-  const dispatch = useDispatch();
   const [userName, setUserName] = useState("");
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const debounceValue = useDebounceHooks(search, 1000);
 
   useEffect(() => {
     setLoading(true);
@@ -39,7 +52,45 @@ const Header = ({ isHiddenSearch, isHiddenCart }) => {
     setLoading(false);
   }, [user?.name]);
 
-  // handle
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      if (!debounceValue) {
+        setOptions([]);
+        return;
+      }
+
+      try {
+        const res = await ProductService.getAllProduct(debounceValue);
+        if (res?.data) {
+          const newOptions = res.data.map((product) => ({
+            value: product.name,
+            label: (
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <Image
+                  width={40}
+                  height={40}
+                  src={product.image}
+                  alt={product.name}
+                  style={{ objectFit: "cover" }}
+                  preview={false}
+                />
+                <span>{product.name}</span>
+                <span style={{ marginLeft: "auto", color: "#aaa" }}>
+                  {product.price}₫
+                </span>
+              </div>
+            ),
+            id: product._id,
+          }));
+          setOptions(newOptions);
+        }
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+      }
+    };
+
+    fetchSuggestions();
+  }, [debounceValue]);
 
   const handleNavigateLogin = () => {
     navigate("/sign-in");
@@ -51,6 +102,31 @@ const Header = ({ isHiddenSearch, isHiddenCart }) => {
     dispatch(resetUser());
     localStorage.removeItem("access_token");
     setLoading(false);
+  };
+
+  const handleSearch = async (value) => {
+    setSearch(value);
+  };
+
+  const handleSubmitSearch = (value) => {
+    const trimmedValue = value.trim();
+    if (!trimmedValue) {
+      if (search.trim()) {
+        return;
+      }
+      messageApi.warning("Vui lòng nhập thông tin tìm kiếm");
+      return;
+    }
+    dispatch(searchProduct(trimmedValue));
+    navigate("/search");
+    setSearch("");
+    setOptions([]);
+  };
+
+  const onSelect = (value, option) => {
+    navigate(`/product/${option.id}`);
+    setOptions([]);
+    setSearch("");
   };
 
   const items = [
@@ -110,6 +186,7 @@ const Header = ({ isHiddenSearch, isHiddenCart }) => {
       }}
     >
       <header className={cx("header", "container")}>
+        {contextHolder}
         <div onClick={() => navigate("/")} className={cx("header-logo")}>
           <Image
             width={50}
@@ -123,20 +200,32 @@ const Header = ({ isHiddenSearch, isHiddenCart }) => {
             Duy Minh <span>Mobile</span>
           </div>
         </div>
+
         {!isHiddenSearch && (
           <div className={cx("header-search")}>
-            <Search
-              placeholder="Bạn muốn tìm gì?"
-              allowClear
-              enterButton={
-                <Button>
-                  <SearchOutlined className={cx("icon")} />
-                </Button>
-              }
-              size="large"
-            />
+            <AutoComplete
+              popupMatchSelectWidth={600}
+              style={{ width: "100%" }}
+              options={options}
+              onSelect={onSelect}
+              onSearch={handleSearch}
+              value={search}
+            >
+              <Input.Search
+                size="large"
+                placeholder="Bạn muốn tìm gì?"
+                allowClear
+                enterButton={
+                  <Button>
+                    <SearchOutlined className={cx("icon")} />
+                  </Button>
+                }
+                onSearch={handleSubmitSearch}
+              />
+            </AutoComplete>
           </div>
         )}
+
         <div className={cx("header-actions")}>
           {isHiddenCart ? (
             <div className={cx("back-user-page")} onClick={() => navigate("/")}>
@@ -151,11 +240,7 @@ const Header = ({ isHiddenSearch, isHiddenCart }) => {
           <Loading isLoading={loading}>
             <div className={cx("account")}>
               {user.name || user.email ? (
-                <Dropdown
-                  menu={{
-                    items,
-                  }}
-                >
+                <Dropdown menu={{ items }}>
                   <a onClick={(e) => e.preventDefault()}>
                     <div className={cx("avatar-wrapper")}>
                       <div className={cx("avatar")}>
