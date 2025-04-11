@@ -15,7 +15,10 @@ const SearchPage = () => {
       if (!searchProduct) return;
       setLoading(true);
       try {
-        const res = await ProductService.getAllProduct(searchProduct);
+        const res = await ProductService.getAllProduct({
+          filter: "name",
+          search: searchProduct,
+        });
         setProducts(res?.data || []);
       } catch (error) {
         console.error("Lỗi tìm kiếm sản phẩm:", error);

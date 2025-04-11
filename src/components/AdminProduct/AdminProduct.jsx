@@ -204,7 +204,7 @@ const AdminProduct = () => {
       sorter: (a, b) => a.name.length - b.name.length,
     },
     { title: "Tên", dataIndex: "name" },
-    { title: "Danh mục", dataIndex: "type" },
+    { title: "Danh mục", dataIndex: "categoryId" },
     { title: "Giá", dataIndex: "price" },
     { title: "Số lượng", dataIndex: "countInStock" },
     { title: "Sao", dataIndex: "rating" },

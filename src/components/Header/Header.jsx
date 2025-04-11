@@ -60,7 +60,10 @@ const Header = ({ isHiddenSearch, isHiddenCart }) => {
       }
 
       try {
-        const res = await ProductService.getAllProduct(debounceValue);
+        const res = await ProductService.getAllProduct({
+          filter: "name",
+          search: debounceValue,
+        });
         if (res?.data) {
           const newOptions = res.data.map((product) => ({
             value: product.name,
@@ -204,7 +207,7 @@ const Header = ({ isHiddenSearch, isHiddenCart }) => {
         {!isHiddenSearch && (
           <div className={cx("header-search")}>
             <AutoComplete
-              popupMatchSelectWidth={600}
+              popupMatchSelectWidth={567}
               style={{ width: "100%" }}
               options={options}
               onSelect={onSelect}

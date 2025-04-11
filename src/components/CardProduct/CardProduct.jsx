@@ -19,8 +19,18 @@ const CardProduct = () => {
         </div>
         <div className={cx("price-box")}>
           <div className={cx("price-wrap")}>
-            <span className={cx("price")}>35.690.000₫</span>
-            <span className={cx("compare-price")}>43.990.000₫</span>
+            <span className={cx("price")}>
+              {(35990000).toLocaleString("vi-VN", {
+                style: "currency",
+                currency: "VND",
+              })}
+            </span>
+            <span className={cx("compare-price")}>
+              {(43990000).toLocaleString("vi-VN", {
+                style: "currency",
+                currency: "VND",
+              })}
+            </span>
           </div>
           <div className={cx("cart-wrap")}>
             <ShoppingCartOutlined className={cx("cart-icon")} />

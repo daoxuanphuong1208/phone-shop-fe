@@ -1,7 +1,11 @@
 import classNames from "classnames/bind";
 import styles from "./HomePage.module.scss";
+import { useEffect, useState } from "react";
+
 import { SliderComponent as Slider } from "../../components/Slider/Slider";
 import ServiceCard from "../../components/ServiceCard/ServiceCard";
+import FrameProduct from "../../components/FrameProduct/FrameProduct";
+import News from "../../components/News/News";
 
 import slider_1 from "../../assets/images/slider_1.webp";
 import slider_2 from "../../assets/images/slider_2.webp";
@@ -11,26 +15,32 @@ import service_1 from "../../assets/images/service_1.webp";
 import service_2 from "../../assets/images/service_2.png";
 import service_3 from "../../assets/images/service_3.png";
 import service_4 from "../../assets/images/service_4.png";
-import FrameProduct from "../../components/FrameProduct/FrameProduct";
-import News from "../../components/News/News";
-import * as ProductService from "../../services/ProductService";
-import { useQuery } from "@tanstack/react-query";
+import * as CategoriesService from "../../services/CategoriesService";
 
 const cx = classNames.bind(styles);
-const HomePage = () => {
-  const fetchAllProduct = async () => {
-    const res = await ProductService.getAllProduct();
-    return res;
-  };
 
-  const { isLoading, data: products } = useQuery({
-    queryKey: ["products"],
-    queryFn: fetchAllProduct,
-    retry: 5,
-    retryDelay: 1000,
-  });
+const HomePage = () => {
+  const [categories, setCategories] = useState([]);
+  const [totalCategory, setTotalCategory] = useState(0);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await CategoriesService.getAllCategories();
+        if (res?.data) {
+          setCategories(res.data);
+          setTotalCategory(res.totalCategory || res.data.length);
+        }
+      } catch (err) {
+        console.error("Lỗi fetch danh mục:", err);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const arrImages = [slider_1, slider_2, slider_3];
+
   const arrService = [
     {
       src: service_1,
@@ -82,19 +92,27 @@ const HomePage = () => {
     <main className={cx("wrapper")}>
       <div className="container">
         <Slider arrImages={arrImages} />
+
         <div className={cx("service")}>
-          {arrService.map((image, index) => {
+          {arrService.map((image, index) => (
+            <ServiceCard
+              key={index}
+              image={image.src}
+              text1={image.text1}
+              text2={image.text2}
+            />
+          ))}
+        </div>
+        {totalCategory > 0 &&
+          categories.map((item, index) => {
             return (
-              <ServiceCard
-                image={image.src}
-                text1={image.text1}
-                text2={image.text2}
+              <FrameProduct
                 key={index}
+                title={item.name}
+                categoryId={item._id}
               />
             );
           })}
-        </div>
-        <FrameProduct products={products?.data && products?.data} />
 
         <div className={cx("news-wrap")}>
           <h1 className={cx("news")}>Tin tức</h1>

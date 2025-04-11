@@ -1,17 +1,32 @@
 import axios from "axios";
 
-export const getAllProduct = async (search) => {
-  let res = {};
+export const getAllProduct = async ({
+  filter,
+  search,
+  limit,
+  page,
+  sort,
+  order,
+} = {}) => {
+  const params = {};
+
   if (search) {
-    res = await axios.get(`${process.env.REACT_APP_API_URL}/product/getAll`, {
-      params: {
-        filter: "name",
-        search,
-      },
-    });
-  } else {
-    res = await axios.get(`${process.env.REACT_APP_API_URL}/product/getAll`);
+    params.search = search;
+    params.filter = filter;
   }
+
+  if (limit !== undefined) params.limit = limit;
+  if (page !== undefined) params.page = page;
+  if (sort) params.sort = sort;
+  if (order) params.order = order;
+
+  const res = await axios.get(
+    `${process.env.REACT_APP_API_URL}/product/getAll`,
+    {
+      params,
+    }
+  );
+
   return res.data;
 };
 
