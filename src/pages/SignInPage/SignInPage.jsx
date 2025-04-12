@@ -38,11 +38,7 @@ const SignInPage = () => {
         if (decoded?.id) {
           handleGetDetailsUser(decoded?.id, data?.access_token);
         }
-        if (decoded?.isAdmin) {
-          setTimeout(() => navigate("/system/admin"), 1000);
-        } else {
-          setTimeout(() => navigate("/"), 1000);
-        }
+        setTimeout(() => navigate("/"), 1000);
       }
     }
   }, [isSuccess]);

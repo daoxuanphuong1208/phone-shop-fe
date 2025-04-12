@@ -68,3 +68,9 @@ export const deleteProduct = (id, token) => {
     }
   ).then((res) => res.json());
 };
+
+export const getDetailsProduct = (id) => {
+  return fetch(`${process.env.REACT_APP_API_URL}/product/get-details/${id}`, {
+    method: "GET",
+  }).then((res) => res.json());
+};

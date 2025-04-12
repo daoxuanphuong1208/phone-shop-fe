@@ -1,32 +1,41 @@
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import classNames from "classnames/bind";
 import styles from "./CardProduct.module.scss";
-import product_1 from "../../assets/images/product_1.webp";
-
 import StarRating from "../StarRating/StarRating";
+import { useNavigate } from "react-router";
 
 const cx = classNames.bind(styles);
 
-const CardProduct = () => {
+const CardProduct = ({ product }) => {
+  const navigate = useNavigate();
+
   return (
     <div className={cx("wrapper")}>
-      <img className={cx("image")} src={product_1} alt="product" />
+      <img
+        onClick={() => navigate(`/product-details/${product._id}`)}
+        className={cx("image")}
+        src={product.image}
+        alt="product"
+      />
       <div className={cx("content")}>
         <span className={cx("sales")}>-19%</span>
         <span className={cx("badge")}>Sản phẩm MỚI</span>
-        <div className={cx("name")}>
-          iPhone 14 Pro Max 512GB Chính hãng VN/A
+        <div
+          onClick={() => navigate(`/product-details/${product._id}`)}
+          className={cx("name")}
+        >
+          {product.name}
         </div>
         <div className={cx("price-box")}>
           <div className={cx("price-wrap")}>
             <span className={cx("price")}>
-              {(35990000).toLocaleString("vi-VN", {
+              {Number(product.price).toLocaleString("vi-VN", {
                 style: "currency",
                 currency: "VND",
               })}
             </span>
             <span className={cx("compare-price")}>
-              {(43990000).toLocaleString("vi-VN", {
+              {Number(product.price).toLocaleString("vi-VN", {
                 style: "currency",
                 currency: "VND",
               })}
@@ -43,7 +52,7 @@ const CardProduct = () => {
         <div className={cx("gift")}>
           Tặng Sạc cáp nhanh 20w giới hạn trị giá 250k
         </div>
-        <StarRating rating={4} />
+        <StarRating rating={product.rating} />
       </div>
     </div>
   );

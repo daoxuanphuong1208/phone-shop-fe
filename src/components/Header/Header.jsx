@@ -127,7 +127,7 @@ const Header = ({ isHiddenSearch, isHiddenCart }) => {
   };
 
   const onSelect = (value, option) => {
-    navigate(`/product/${option.id}`);
+    navigate(`/product-details/${option.id}`);
     setOptions([]);
     setSearch("");
   };

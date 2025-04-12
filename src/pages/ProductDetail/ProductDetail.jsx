@@ -1,42 +1,95 @@
-import { Image, InputNumber } from "antd";
+import { Button, Image, InputNumber } from "antd";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import classNames from "classnames/bind";
 import styles from "./ProductDetail.module.scss";
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
 import BoxWrapper from "../../components/BoxWrapper/BoxWrapper";
-import product_detail from "../../assets/images/product_detail.webp";
 import product_details_return from "../../assets/images/product_details_return.png";
 import product_details_commit from "../../assets/images/product_details_commit.png";
 import product_details_transport from "../../assets/images/product_details_transport.png";
 import product_details_warranty from "../../assets/images/product_details_warranty.png";
+import { useParams } from "react-router";
+import { useEffect, useState } from "react";
+import * as ProductService from "../../services/ProductService";
 
 const cx = classNames.bind(styles);
 
 const ProductDetail = () => {
-  function onChange(value) {}
+  let params = useParams();
+  const [quantity, setQuantity] = useState(1);
+  const [product, setProduct] = useState({});
+
+  useEffect(() => {
+    const getProductDetail = async () => {
+      const res = await ProductService.getDetailsProduct(params.id);
+      setProduct(res?.data);
+    };
+    getProductDetail();
+  }, []);
+
+  const handleQuantity = (type) => {
+    setQuantity((prev) => {
+      if (type === "increase") {
+        return Math.min(prev + 1, product?.countInStock || 1);
+      } else {
+        return Math.max(prev - 1, 1);
+      }
+    });
+  };
+
+  const onChange = (value) => {
+    if (!value) {
+      setQuantity(1);
+    } else if (value > product?.countInStock) {
+      setQuantity(product?.countInStock);
+    } else if (value < 1) {
+      setQuantity(1);
+    } else {
+      setQuantity(value);
+    }
+  };
+  const onBlur = () => {
+    if (quantity < 1) {
+      setQuantity(1);
+    } else if (quantity > product?.countInStock) {
+      setQuantity(product?.countInStock);
+    }
+  };
 
   return (
     <div className={cx("wrapper", "container")}>
-      <Breadcrumb />
+      <Breadcrumb
+        breadcrumFirst={{ label: "Chi tiết sản phẩm" }}
+        breadcrumSecond={{ label: product?.name }}
+      />
       <div className={cx("content")}>
         <div className={cx("content-image")}>
           <Image
             width={365}
             height={365}
-            src={product_detail}
+            src={product?.image}
             alt="product detail"
           />
         </div>
         <div className={cx("content-info")}>
-          <h3 className={cx("name")}>
-            iPhone 14 Pro Max 512GB Chính hãng VN/A
-          </h3>
+          <h3 className={cx("name")}>{product?.name}</h3>
           <div className={cx("price")}>
             Giá:
-            <span>35.690.000₫</span>
+            <span>
+              {Number(product.price).toLocaleString("vi-VN", {
+                style: "currency",
+                currency: "VND",
+              })}
+            </span>
           </div>
           <div className={cx("compare-price")}>
-            Giá thị trường: <span>35.690.000₫</span>
+            Giá thị trường:{" "}
+            <span>
+              {Number(product.price).toLocaleString("vi-VN", {
+                style: "currency",
+                currency: "VND",
+              })}
+            </span>
           </div>
           <div className={cx("status")}>
             Tình trạng: <span>Mới 99%</span>
@@ -46,13 +99,28 @@ const ProductDetail = () => {
             <span>Tặng Sạc cáp nhanh 20w giới hạn trị giá 250k</span>
           </div>
           <div className={cx("count")}>
+            <div
+              className={cx("decrease")}
+              onClick={() => handleQuantity("decrease")}
+            >
+              -
+            </div>
             <InputNumber
+              className={cx("custom-input-number")}
               min={1}
-              max={10}
-              defaultValue={1}
+              max={product?.countInStock}
+              value={quantity}
               size="large"
               onChange={onChange}
+              onBlur={onBlur}
+              controls={false}
             />
+            <div
+              className={cx("increase")}
+              onClick={() => handleQuantity("increase")}
+            >
+              +
+            </div>
           </div>
           <div className={cx("btn")}>
             <button className={cx("btn-add")}>Thêm vào giỏ hàng</button>
@@ -104,30 +172,7 @@ const ProductDetail = () => {
       </div>
       <div className={cx("description")}>
         <h3>Mô tả sản phẩm</h3>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore
-          numquam aut aliquam perferendis ex natus delectus fugiat doloribus
-          inventore praesentium optio, accusamus iusto repudiandae assumenda
-          ullam ipsum consectetur animi rem voluptatem fugit quia sit sint
-          nesciunt unde. Aut excepturi quasi unde omnis vitae soluta
-          voluptatibus modi quisquam voluptate ex vel, eligendi hic est ipsam
-          beatae tempore, quae eos voluptatem quis fugiat veritatis quas quo
-          eum! Eius officiis ad itaque eum! Nisi natus aut nesciunt quod,
-          doloremque tenetur provident doloribus vel, harum eos eaque eveniet
-          itaque expedita fugit quasi reiciendis laborum? Accusantium corrupti
-          iste ab quod rerum assumenda, ducimus quis deserunt unde ipsa porro
-          voluptas sit sapiente deleniti? Voluptatem accusantium, saepe, optio
-          amet cum provident placeat quisquam rerum cupiditate quaerat officiis!
-          Cumque, quisquam facilis provident, minima, earum et voluptatem animi
-          esse libero similique ab itaque vel velit perspiciatis quam pariatur
-          quia omnis maxime recusandae? Voluptates explicabo voluptas ex totam
-          nam cupiditate fugiat sapiente, libero minus labore enim, ullam dolor.
-          Accusamus delectus ducimus obcaecati dolor nihil ex? Autem natus dolor
-          labore. Cum rerum dolorem molestias, fugiat nemo perspiciatis odio,
-          molestiae nesciunt et dolore debitis, commodi ullam laudantium ab!
-          Delectus, aspernatur incidunt quia porro id asperiores. Sequi voluptas
-          autem ipsa omnis obcaecati tenetur!
-        </p>
+        <p>{product?.description}</p>
       </div>
     </div>
   );

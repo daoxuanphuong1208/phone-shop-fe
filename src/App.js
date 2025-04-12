@@ -14,16 +14,12 @@ const App = () => {
   const user = useSelector((state) => state.user);
 
   useEffect(() => {
-    const init = async () => {
-      setIsLoading(true);
-      const { storeData, decoded } = handleDecoded();
-      if (decoded?.id) {
-        await handleGetDetailsUser(decoded.id, storeData);
-      }
-      setIsLoading(false);
-    };
-
-    init();
+    setIsLoading(true);
+    const { storeData, decoded } = handleDecoded();
+    if (decoded?.id && storeData) {
+      handleGetDetailsUser(decoded.id, storeData);
+    }
+    setIsLoading(false);
   }, []);
 
   const handleDecoded = () => {
@@ -41,7 +37,7 @@ const App = () => {
     async (config) => {
       const { decoded } = handleDecoded();
       const currentTime = new Date().getTime() / 1000;
-      if (decoded?.exp < currentTime) {
+      if (decoded?.exp && decoded?.exp < currentTime) {
         const data = await UserServices.refreshToken();
         localStorage.setItem("access_token", JSON.stringify(data.access_token));
         config.headers["token"] = `Bearer ${data.access_token}`;

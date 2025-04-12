@@ -53,7 +53,7 @@ const routes = [
     layout: DefaultLayout,
   },
   {
-    path: "/product-details",
+    path: "/product-details/:id",
     page: ProductDetail,
     layout: DefaultLayout,
   },
