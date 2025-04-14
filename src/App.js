@@ -14,12 +14,15 @@ const App = () => {
   const user = useSelector((state) => state.user);
 
   useEffect(() => {
-    setIsLoading(true);
-    const { storeData, decoded } = handleDecoded();
-    if (decoded?.id && storeData) {
-      handleGetDetailsUser(decoded.id, storeData);
-    }
-    setIsLoading(false);
+    const fetchData = async () => {
+      setIsLoading(true);
+      const { storeData, decoded } = handleDecoded();
+      if (decoded?.id && storeData) {
+        await handleGetDetailsUser(decoded.id, storeData);
+      }
+      setIsLoading(false);
+    };
+    fetchData();
   }, []);
 
   const handleDecoded = () => {
@@ -50,14 +53,34 @@ const App = () => {
   );
 
   const handleGetDetailsUser = async (id, token) => {
-    const res = await UserServices.getDetailsUser(id, token);
-    dispatch(
-      updateUser({
-        ...res?.data,
-        access_token: token,
-      })
-    );
-    setIsLoading(false);
+    try {
+      let finalToken = token;
+
+      if (isJsonString(token)) {
+        const decoded = jwtDecode(JSON.parse(token));
+        const currentTime = new Date().getTime() / 1000;
+
+        if (decoded.exp < currentTime) {
+          const data = await UserServices.refreshToken();
+          finalToken = JSON.stringify(data.access_token);
+          localStorage.setItem("access_token", finalToken);
+        }
+      }
+
+      const res = await UserServices.getDetailsUser(id, finalToken);
+
+      dispatch(
+        updateUser({
+          ...res?.data,
+          access_token: finalToken,
+        })
+      );
+    } catch (error) {
+      console.error("Lỗi khi lấy thông tin user:", error);
+      localStorage.removeItem("access_token");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

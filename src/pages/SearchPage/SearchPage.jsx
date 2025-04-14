@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
 import ProductList from "../../components/ProductList/ProductList";
 import * as ProductService from "../../services/ProductService";
-import Loading from "../../components/Loading/Loading"; // Import component của bạn
+import Loading from "../../components/Loading/Loading";
 
 const SearchPage = () => {
   const searchProduct = useSelector((state) => state?.product?.search);

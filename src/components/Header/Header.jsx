@@ -105,6 +105,7 @@ const Header = ({ isHiddenSearch, isHiddenCart }) => {
     dispatch(resetUser());
     localStorage.removeItem("access_token");
     setLoading(false);
+    navigate("/");
   };
 
   const handleSearch = async (value) => {
@@ -190,7 +191,12 @@ const Header = ({ isHiddenSearch, isHiddenCart }) => {
     >
       <header className={cx("header", "container")}>
         {contextHolder}
-        <div onClick={() => navigate("/")} className={cx("header-logo")}>
+        <div
+          onClick={() => {
+            user?.isAdmin ? navigate("/system/admin") : navigate("/");
+          }}
+          className={cx("header-logo")}
+        >
           <Image
             width={50}
             height={50}

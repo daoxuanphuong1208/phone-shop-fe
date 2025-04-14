@@ -1,4 +1,4 @@
-import { Button, Image, InputNumber } from "antd";
+import { Image, InputNumber } from "antd";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import classNames from "classnames/bind";
 import styles from "./ProductDetail.module.scss";
@@ -20,6 +20,7 @@ const ProductDetail = () => {
   const [product, setProduct] = useState({});
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     const getProductDetail = async () => {
       const res = await ProductService.getDetailsProduct(params.id);
       setProduct(res?.data);

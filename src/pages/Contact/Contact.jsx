@@ -105,8 +105,9 @@ const Contact = () => {
         </div>
         <div className={cx("map")}>
           <iframe
-            className={cx("map-iframe")}
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3539.6406038721384!2d105.7767188750316!3d21.03685218061442!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x313454b578dfa25b%3A0xd35137394a981300!2sMobile%20Repair!5e1!3m2!1svi!2s!4v1742454110441!5m2!1svi!2s"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3369.9176603178344!2d105.77247247471472!3d21.03747758748018!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x313454b61ea47963%3A0x34eb9c34d58cf6a1!2zMTAgxJAuIEjhu5MgVMO5bmcgTeG6rXUsIE1haSBE4buLY2gsIEPhuqd1IEdp4bqleSwgSMOgIE7hu5lpLCBWaeG7h3QgTmFt!5e1!3m2!1svi!2s!4v1744445136215!5m2!1svi!2s"
+            width="600px"
+            height="450px"
             allowfullscreen=""
             loading="lazy"
             referrerpolicy="no-referrer-when-downgrade"

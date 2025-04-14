@@ -75,7 +75,7 @@ const Profile = () => {
       {user?.isAdmin ? <Header isHiddenSearch isHiddenCart /> : <Header />}
       {user?.isAdmin ? null : <Navigation />}
       {contextHolder}
-      <Breadcrumb />
+      {user?.isAdmin ? null : <Breadcrumb />}
       <div className={cx("wrapper")}>
         <h2>Thông tin người dùng</h2>
         <Loading isLoading={isPending}>

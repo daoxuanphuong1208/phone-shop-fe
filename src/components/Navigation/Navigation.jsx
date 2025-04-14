@@ -1,34 +1,45 @@
 import { useNavigate } from "react-router";
 import classNames from "classnames/bind";
-import { Dropdown, message } from "antd";
+import { Dropdown } from "antd";
 import { DownOutlined } from "@ant-design/icons";
+import * as CategoriesService from "../../services/CategoriesService";
 
 import styles from "./Navigation.module.scss";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { searchProduct } from "../../redux/slides/productSlice";
 const cx = classNames.bind(styles);
-
-//data config
-const items = [
-  {
-    label: "1st menu item",
-    key: "1",
-  },
-  {
-    label: "2nd menu item",
-    key: "2",
-  },
-  {
-    label: "3rd menu item",
-    key: "3",
-  },
-];
 
 const Navigation = () => {
   //state
   let navigate = useNavigate();
+  const [categories, setCategories] = useState([]);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await CategoriesService.getAllCategories();
+        if (res?.data) {
+          setCategories(res.data);
+        }
+      } catch (err) {
+        console.error("Lỗi fetch danh mục:", err);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  const items = categories?.map((category) => ({
+    key: category?._id,
+    label: category?.name,
+  }));
 
   //handle
   const onClick = ({ key }) => {
-    message.info(`Click on item ${key}`);
+    dispatch(searchProduct(key));
+    navigate("/type");
   };
 
   return (
@@ -44,7 +55,12 @@ const Navigation = () => {
               onClick,
             }}
           >
-            <a onClick={() => navigate("/type")}>
+            <a
+              onClick={() => {
+                dispatch(searchProduct(""));
+                navigate("/type");
+              }}
+            >
               Sản phẩm <DownOutlined />
             </a>
           </Dropdown>

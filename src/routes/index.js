@@ -22,7 +22,7 @@ const routes = [
     layout: DefaultLayout,
   },
   {
-    path: "/:type",
+    path: "/type",
     page: TypeProductPage,
     layout: DefaultLayout,
   },
@@ -70,7 +70,6 @@ const routes = [
   {
     path: "/profile",
     page: Profile,
-    layout: DefaultLayout,
   },
   {
     path: "/system/admin",
