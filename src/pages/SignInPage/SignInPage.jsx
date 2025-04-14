@@ -2,7 +2,7 @@ import { FacebookFilled, GooglePlusSquareFilled } from "@ant-design/icons";
 import { Button, ConfigProvider, Form, Input, message } from "antd";
 import classNames from "classnames/bind";
 import styles from "./SignInPage.module.scss";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import * as UserServices from "../../services/UserSevice";
 import { useMutationHooks } from "../../hooks/useMutationHooks";
 import Loading from "../../components/Loading/Loading";
@@ -17,6 +17,7 @@ const SignInPage = () => {
   let navigate = useNavigate();
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
+  const location = useLocation();
   const mutation = useMutationHooks((data) => UserServices.loginUser(data));
   const { data, isPending, isSuccess } = mutation;
   const mutationForgot = useMutationHooks((data) =>
@@ -38,7 +39,11 @@ const SignInPage = () => {
         if (decoded?.id) {
           handleGetDetailsUser(decoded?.id, data?.access_token);
         }
-        setTimeout(() => navigate("/"), 1000);
+        if (location?.state) {
+          setTimeout(() => navigate(location?.state), 1000);
+        } else {
+          setTimeout(() => navigate("/"), 1000);
+        }
       }
     }
   }, [isSuccess]);

@@ -1,4 +1,4 @@
-import { Image, InputNumber } from "antd";
+import { Image, InputNumber, message } from "antd";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import classNames from "classnames/bind";
 import styles from "./ProductDetail.module.scss";
@@ -8,9 +8,11 @@ import product_details_return from "../../assets/images/product_details_return.p
 import product_details_commit from "../../assets/images/product_details_commit.png";
 import product_details_transport from "../../assets/images/product_details_transport.png";
 import product_details_warranty from "../../assets/images/product_details_warranty.png";
-import { useParams } from "react-router";
+import { useLocation, useParams, useNavigate } from "react-router";
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import * as ProductService from "../../services/ProductService";
+import { addOrderProduct } from "../../redux/slides/orderSlice";
 
 const cx = classNames.bind(styles);
 
@@ -18,6 +20,11 @@ const ProductDetail = () => {
   let params = useParams();
   const [quantity, setQuantity] = useState(1);
   const [product, setProduct] = useState({});
+  const user = useSelector((state) => state.user);
+  const navigate = useNavigate();
+  const [messageApi, contextHolder] = message.useMessage();
+  const location = useLocation();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -57,8 +64,32 @@ const ProductDetail = () => {
     }
   };
 
+  const handleAddProduct = () => {
+    if (user?.id) {
+      dispatch(
+        addOrderProduct({
+          orderItem: {
+            name: product?.name,
+            amount: quantity,
+            image: product?.image,
+            price: product?.price,
+            product: product?._id,
+          },
+        })
+      );
+    } else {
+      messageApi.info("Bạn cần đăng nhập");
+      setTimeout(() => {
+        navigate("/sign-in", {
+          state: location?.pathname,
+        });
+      }, 1000);
+    }
+  };
+
   return (
     <div className={cx("wrapper", "container")}>
+      {contextHolder}
       <Breadcrumb
         breadcrumFirst={{ label: "Chi tiết sản phẩm" }}
         breadcrumSecond={{ label: product?.name }}
@@ -124,7 +155,9 @@ const ProductDetail = () => {
             </div>
           </div>
           <div className={cx("btn")}>
-            <button className={cx("btn-add")}>Thêm vào giỏ hàng</button>
+            <button onClick={handleAddProduct} className={cx("btn-add")}>
+              Thêm vào giỏ hàng
+            </button>
             <button className={cx("btn-buy")}>
               Mua ngay <ShoppingCartOutlined className={cx("cart-icon")} />
             </button>

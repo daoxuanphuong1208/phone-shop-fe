@@ -41,6 +41,7 @@ const Header = ({ isHiddenSearch, isHiddenCart }) => {
   const [search, setSearch] = useState("");
   const [options, setOptions] = useState([]);
   const user = useSelector((state) => state.user);
+  const order = useSelector((state) => state.order);
   const [userName, setUserName] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -243,7 +244,7 @@ const Header = ({ isHiddenSearch, isHiddenCart }) => {
           ) : (
             <div onClick={() => navigate("/cart")} className={cx("cart")}>
               <ShoppingOutlined className={cx("icon")} />
-              <span className={cx("count")}>0</span>
+              <span className={cx("count")}>{order?.orderItems?.length}</span>
             </div>
           )}
           <Loading isLoading={loading}>
