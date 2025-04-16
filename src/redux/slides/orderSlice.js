@@ -3,7 +3,6 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   orderItems: [],
   shippingAddress: {},
-
   paymentMethod: "",
   itemsPrice: 0,
   shippingPrice: 0,
@@ -38,9 +37,14 @@ export const orderSlice = createSlice({
         (item) => item.product !== idProduct
       );
     },
+
+    removeAllOrderProduct: (state) => {
+      state.orderItems = [];
+    },
   },
 });
 
-export const { addOrderProduct, removeOrderProduct } = orderSlice.actions;
+export const { addOrderProduct, removeOrderProduct, removeAllOrderProduct } =
+  orderSlice.actions;
 
 export default orderSlice.reducer;

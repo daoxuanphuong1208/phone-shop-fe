@@ -4,22 +4,34 @@ import styles from "./Cart.module.scss";
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
 import no_cart from "../../assets/images/no-cart.webp";
 import { useSelector, useDispatch } from "react-redux";
-import { removeOrderProduct } from "../../redux/slides/orderSlice";
+import {
+  removeOrderProduct,
+  removeAllOrderProduct,
+} from "../../redux/slides/orderSlice";
 import { DeleteOutlined } from "@ant-design/icons";
+import { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 
 const cx = classNames.bind(styles);
 
 const Cart = () => {
   const dispatch = useDispatch();
   const order = useSelector((state) => state.order);
-  const orderItems = order?.orderItems || [];
+  const navigate = useNavigate();
 
+  const orderItems = order?.orderItems || [];
   const hasProduct = orderItems.length > 0;
 
-  const totalPrice = orderItems.reduce(
-    (total, item) => total + item.price * item.amount,
-    0
-  );
+  const totalPrice = useMemo(() => {
+    return orderItems.reduce(
+      (total, item) => total + item.price * item.amount,
+      0
+    );
+  }, [orderItems]);
+
+  const handleCheckout = () => {
+    navigate("/checkout");
+  };
 
   const columns = [
     {
@@ -85,9 +97,17 @@ const Cart = () => {
       <h3 className={cx("heading")}>Giỏ hàng của bạn</h3>
       {hasProduct ? (
         <div className={cx("content")}>
+          <div
+            onClick={() => dispatch(removeAllOrderProduct())}
+            className={cx("btn-remove-all")}
+          >
+            <DeleteOutlined /> Xóa tất cả
+          </div>
           <Table pagination={false} columns={columns} dataSource={data} />
           <div className={cx("footer")}>
-            <span className={cx("btn-return")}>Tiếp tục mua hàng</span>
+            <span onClick={() => navigate("/")} className={cx("btn-return")}>
+              Tiếp tục mua hàng
+            </span>
             <div>
               <div className={cx("total")}>
                 <h4>Tổng tiền</h4>
@@ -98,7 +118,9 @@ const Cart = () => {
                   })}
                 </span>
               </div>
-              <button className={cx("btn-checkout")}>Thanh toán</button>
+              <button onClick={handleCheckout} className={cx("btn-checkout")}>
+                Thanh toán
+              </button>
             </div>
           </div>
         </div>

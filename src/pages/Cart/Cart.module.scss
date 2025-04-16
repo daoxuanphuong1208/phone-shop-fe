@@ -12,6 +12,15 @@
     font-size: 1.4rem;
     color: #e8002d;
   }
+
+  .btn-remove-all {
+    margin-bottom: 10px;
+
+    &:hover {
+      cursor: pointer;
+      color: var(--subColor);
+    }
+  }
 }
 
 .empty {

@@ -1,6 +1,6 @@
 import HomePage from "../pages/HomePage/HomePage";
 import TypeProductPage from "../pages/TypeProductPage/TypeProductPage";
-import OrderPage from "../pages/OrderPage/OrderPage";
+import CheckOutPage from "../pages/CheckOutPage/CheckOutPage";
 import SearchPage from "../pages/SearchPage/SearchPage";
 import ProductDetail from "../pages/ProductDetail/ProductDetail";
 import SignInPage from "../pages/SignInPage/SignInPage";
@@ -27,9 +27,8 @@ const routes = [
     layout: DefaultLayout,
   },
   {
-    path: "/order",
-    page: OrderPage,
-    layout: DefaultLayout,
+    path: "/checkout",
+    page: CheckOutPage,
   },
 
   {

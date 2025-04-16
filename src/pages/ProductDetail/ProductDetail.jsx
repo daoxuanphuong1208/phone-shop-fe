@@ -64,6 +64,30 @@ const ProductDetail = () => {
     }
   };
 
+  const handleBuyNow = () => {
+    if (user?.id) {
+      dispatch(
+        addOrderProduct({
+          orderItem: {
+            name: product?.name,
+            amount: quantity,
+            image: product?.image,
+            price: product?.price,
+            product: product?._id,
+          },
+        })
+      );
+      navigate("/checkout");
+    } else {
+      messageApi.info("Bạn cần đăng nhập");
+      setTimeout(() => {
+        navigate("/sign-in", {
+          state: location?.pathname,
+        });
+      }, 1000);
+    }
+  };
+
   const handleAddProduct = () => {
     if (user?.id) {
       dispatch(
@@ -158,7 +182,7 @@ const ProductDetail = () => {
             <button onClick={handleAddProduct} className={cx("btn-add")}>
               Thêm vào giỏ hàng
             </button>
-            <button className={cx("btn-buy")}>
+            <button onClick={handleBuyNow} className={cx("btn-buy")}>
               Mua ngay <ShoppingCartOutlined className={cx("cart-icon")} />
             </button>
           </div>

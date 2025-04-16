@@ -24,6 +24,7 @@ const HomePage = () => {
   const [totalCategory, setTotalCategory] = useState(0);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     const fetchCategories = async () => {
       try {
         const res = await CategoriesService.getAllCategories();
