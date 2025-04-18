@@ -1,6 +1,7 @@
 import HomePage from "../pages/HomePage/HomePage";
 import TypeProductPage from "../pages/TypeProductPage/TypeProductPage";
 import CheckOutPage from "../pages/CheckOutPage/CheckOutPage";
+import OrderSuccess from "../pages/OrderSuccess/OrderSuccess";
 import SearchPage from "../pages/SearchPage/SearchPage";
 import ProductDetail from "../pages/ProductDetail/ProductDetail";
 import SignInPage from "../pages/SignInPage/SignInPage";
@@ -30,7 +31,10 @@ const routes = [
     path: "/checkout",
     page: CheckOutPage,
   },
-
+  {
+    path: "/order-success",
+    page: OrderSuccess,
+  },
   {
     path: "/news",
     page: News,

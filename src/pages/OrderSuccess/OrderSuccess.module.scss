@@ -1,0 +1,108 @@
+.wrapper {
+  padding: 50px 50px 0 50px;
+
+  .logo {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    .img {
+      cursor: pointer;
+    }
+
+    div {
+      font-size: 2.6rem;
+      font-weight: 800;
+      color: var(--mainColor);
+
+      span {
+        color: var(--subColor);
+      }
+    }
+  }
+}
+
+.title {
+  margin-top: 10px;
+  font-size: 26px;
+  .icon {
+    color: green;
+  }
+}
+
+.content {
+  margin-top: 20px;
+  display: flex;
+  gap: 50px;
+
+  .left {
+    flex: 1;
+
+    p {
+      margin-top: 10px;
+    }
+  }
+
+  .right {
+    flex: 1;
+  }
+}
+
+.order-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .order-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    img {
+      border-radius: 4px;
+    }
+  }
+
+  .order-price {
+    margin-left: auto;
+    text-align: right;
+    white-space: nowrap;
+    font-weight: 600;
+    color: #1f2937;
+  }
+}
+
+.order-fee,
+.order-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+
+  span:first-child {
+    font-weight: 500;
+    color: #374151;
+  }
+
+  span:last-child {
+    font-weight: 600;
+    color: #111827;
+    white-space: nowrap;
+    text-align: right;
+  }
+}
+
+.order-total {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 12px;
+  font-size: 16px;
+}
+
+.continue-shopping {
+  margin-top: 30px;
+}

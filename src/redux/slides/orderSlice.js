@@ -6,7 +6,6 @@ const initialState = {
   paymentMethod: "",
   itemsPrice: 0,
   shippingPrice: 0,
-  taxPrice: 0,
   totalPrice: 0,
   user: "",
   isPaid: false,
@@ -41,10 +40,23 @@ export const orderSlice = createSlice({
     removeAllOrderProduct: (state) => {
       state.orderItems = [];
     },
+    setOrderInfo: (state, action) => {
+      const { orderInfo } = action.payload;
+      state.shippingAddress = orderInfo.shippingAddress;
+      state.paymentMethod = orderInfo.paymentMethod;
+      state.itemsPrice = orderInfo.itemsPrice;
+      state.shippingPrice = orderInfo.shippingPrice;
+      state.totalPrice = orderInfo.totalPrice;
+      state.user = orderInfo.user;
+    },
   },
 });
 
-export const { addOrderProduct, removeOrderProduct, removeAllOrderProduct } =
-  orderSlice.actions;
+export const {
+  addOrderProduct,
+  removeOrderProduct,
+  removeAllOrderProduct,
+  setOrderInfo,
+} = orderSlice.actions;
 
 export default orderSlice.reducer;

@@ -10,12 +10,13 @@ import {
 } from "antd";
 import { DollarOutlined } from "@ant-design/icons";
 import { useEffect, useMemo, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import classNames from "classnames/bind";
 import styles from "./CheckOutPage.module.scss";
 import logo from "../../assets/images/logo.png";
 import { useNavigate } from "react-router-dom";
 import { useMutationHooks } from "../../hooks/useMutationHooks";
+import { setOrderInfo } from "../../redux/slides/orderSlice";
 
 import * as OrderService from "../../services/OrderService";
 
@@ -28,6 +29,7 @@ const CheckOutPage = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const mutation = useMutationHooks((data) => OrderService.createOrder(data));
   const { data, isSuccess, isPending } = mutation;
+  const dispatch = useDispatch();
 
   const [provinces, setProvinces] = useState([]);
   const [districts, setDistricts] = useState([]);
@@ -53,19 +55,20 @@ const CheckOutPage = () => {
   }, [selectedProvince, paymentMethod]);
 
   useEffect(() => {
+    if (isSuccess && data?.status === "OK") {
+      messageApi.success("Đặt hàng thành công");
+      dispatch(setOrderInfo({ orderInfo: data.data }));
+      setTimeout(() => {
+        navigate("/order-success");
+      }, 1000);
+    }
+  }, [isSuccess]);
+
+  useEffect(() => {
     fetch("https://provinces.open-api.vn/api/p/")
       .then((res) => res.json())
       .then((data) => setProvinces(data));
   }, []);
-
-  useEffect(() => {
-    if (isSuccess && data?.status === "OK") {
-      messageApi.success("Đặt hàng thành công");
-      // setTimeout(() => {
-      //   navigate("/");
-      // }, 2000);
-    }
-  }, [isSuccess]);
 
   const handleProvinceChange = (provinceCode) => {
     const selected = provinces.find((p) => p.code === provinceCode);
@@ -91,14 +94,6 @@ const CheckOutPage = () => {
 
   const onFinish = (values) => {
     const { province, ...rest } = values;
-    // if (
-    //   user?.access_token &&
-    //   order?.orderItems &&
-    //   user?.name &&
-    //   province &&
-    //   user?.id &&
-    //   totalPrice
-    // ) {}
     mutation.mutate({
       token: user?.access_token,
       orderItems: order?.orderItems,
