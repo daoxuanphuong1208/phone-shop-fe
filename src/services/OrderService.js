@@ -11,3 +11,32 @@ export const createOrder = async ({ access_token, ...data }) => {
   const result = await res.json();
   return result;
 };
+
+export const getAllOrders = async (userId) => {
+  const res = await fetch(
+    `${process.env.REACT_APP_API_URL}/order/getAllOrders?userId=${userId}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  const result = await res.json();
+  return result;
+};
+
+export const getOrderDetail = async (orderId) => {
+  const res = await fetch(
+    `${process.env.REACT_APP_API_URL}/order/getOrderDetail/${orderId}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  const result = await res.json();
+  return result;
+};

@@ -9,6 +9,10 @@ const cx = classNames.bind(styles);
 const CardProduct = ({ product }) => {
   const navigate = useNavigate();
 
+  if (product.countInStock === 0) {
+    return null;
+  }
+
   return (
     <div className={cx("wrapper")}>
       <img

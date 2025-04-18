@@ -160,7 +160,9 @@ const Header = ({ isHiddenSearch, isHiddenCart }) => {
         }
       : {
           key: "2",
-          label: <span>Đơn hàng của tôi</span>,
+          label: (
+            <span onClick={() => navigate("/my-order")}>Đơn hàng của tôi</span>
+          ),
           icon: <ProductOutlined />,
         },
     {

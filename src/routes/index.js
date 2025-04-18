@@ -13,6 +13,7 @@ import Cart from "../pages/Cart/Cart";
 import Profile from "../pages/Profile/Profile";
 import AdminPage from "../pages/AdminPage/AdminPage";
 import ResetPassword from "../pages/ResetPassword/ResetPassword";
+import MyOrder from "../pages/MyOrder/MyOrder";
 
 import DefaultLayout from "../layouts/DefaultLayout/DefaultLayout";
 
@@ -34,6 +35,11 @@ const routes = [
   {
     path: "/order-success",
     page: OrderSuccess,
+  },
+  {
+    path: "/my-order",
+    page: MyOrder,
+    layout: DefaultLayout,
   },
   {
     path: "/news",
