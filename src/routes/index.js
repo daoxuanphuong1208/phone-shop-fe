@@ -14,6 +14,7 @@ import Profile from "../pages/Profile/Profile";
 import AdminPage from "../pages/AdminPage/AdminPage";
 import ResetPassword from "../pages/ResetPassword/ResetPassword";
 import MyOrder from "../pages/MyOrder/MyOrder";
+import OrderDetail from "../pages/OrderDetail/OrderDetail";
 
 import DefaultLayout from "../layouts/DefaultLayout/DefaultLayout";
 
@@ -41,6 +42,12 @@ const routes = [
     page: MyOrder,
     layout: DefaultLayout,
   },
+  {
+    path: "/order-details/:id",
+    page: OrderDetail,
+    layout: DefaultLayout,
+  },
+
   {
     path: "/news",
     page: News,
