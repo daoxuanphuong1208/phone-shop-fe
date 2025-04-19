@@ -40,3 +40,17 @@ export const getOrderDetail = async (orderId) => {
   const result = await res.json();
   return result;
 };
+
+export const cancelOrder = async (orderId) => {
+  const res = await fetch(
+    `${process.env.REACT_APP_API_URL}/order/cancelOrder/${orderId}`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  const result = await res.json();
+  return result;
+};

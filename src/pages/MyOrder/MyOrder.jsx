@@ -4,6 +4,7 @@ import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
 import styles from "./MyOrder.module.scss";
 import * as OrderService from "../../services/OrderService";
 import { useSelector } from "react-redux";
+import { message, Modal } from "antd";
 import { useNavigate } from "react-router-dom";
 
 const cx = classNames.bind(styles);
@@ -12,6 +13,10 @@ const MyOrder = () => {
   const [orders, setOrders] = useState([]);
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const [messageApi, contextHolder] = message.useMessage();
+  const [open, setOpen] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -24,8 +29,41 @@ const MyOrder = () => {
     getAllOrders();
   }, [user?.id]);
 
+  const showCancelModal = (orderId) => {
+    setSelectedOrderId(orderId);
+    setOpen(true);
+  };
+
+  const handleCancel = () => {
+    setOpen(false);
+    setSelectedOrderId(null);
+  };
+
+  const handleOk = async () => {
+    setConfirmLoading(true);
+    try {
+      const res = await OrderService.cancelOrder(selectedOrderId);
+      if (res.status === "OK") {
+        messageApi.success("Hủy đơn hàng thành công!");
+        const newOrders = orders.filter(
+          (order) => order._id !== selectedOrderId
+        );
+        setOrders(newOrders);
+      } else {
+        messageApi.error("Đã có lỗi xảy ra khi hủy đơn hàng.");
+      }
+    } catch (error) {
+      messageApi.error("Không thể kết nối tới máy chủ.");
+    } finally {
+      setConfirmLoading(false);
+      setOpen(false);
+      setSelectedOrderId(null);
+    }
+  };
+
   return (
     <div className={cx("wrapper", "container")}>
+      {contextHolder}
       <Breadcrumb
         breadcrumFirst={{
           label: "Đơn hàng của tôi",
@@ -47,6 +85,9 @@ const MyOrder = () => {
               <div className={cx("payment")}>
                 Thanh toán: {order.isPaid ? "Đã thanh toán" : "Chưa thanh toán"}
               </div>
+              {order.isCanceled && (
+                <div className={cx("canceled")}>Đơn hàng đã hủy</div>
+              )}
             </div>
 
             {order.orderItems.map((item, index) => (
@@ -72,7 +113,11 @@ const MyOrder = () => {
             </div>
 
             <div className={cx("actions")}>
-              <button>Hủy đơn hàng</button>
+              {!order.isCanceled && (
+                <button onClick={() => showCancelModal(order._id)}>
+                  Hủy đơn hàng
+                </button>
+              )}
               <button onClick={() => navigate(`/order-details/${order._id}`)}>
                 Xem chi tiết
               </button>
@@ -80,6 +125,18 @@ const MyOrder = () => {
           </div>
         ))
       )}
+
+      <Modal
+        title="Hủy đơn hàng"
+        open={open}
+        onOk={handleOk}
+        confirmLoading={confirmLoading}
+        onCancel={handleCancel}
+        okText="Đồng ý"
+        cancelText="Hủy bỏ"
+      >
+        <p>Bạn có chắc muốn hủy đơn hàng?</p>
+      </Modal>
     </div>
   );
 };
