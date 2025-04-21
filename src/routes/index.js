@@ -15,6 +15,7 @@ import AdminPage from "../pages/AdminPage/AdminPage";
 import ResetPassword from "../pages/ResetPassword/ResetPassword";
 import MyOrder from "../pages/MyOrder/MyOrder";
 import OrderDetail from "../pages/OrderDetail/OrderDetail";
+import CheckoutSuccess from "../pages/CheckoutSuccess/CheckoutSuccess ";
 
 import DefaultLayout from "../layouts/DefaultLayout/DefaultLayout";
 
@@ -32,6 +33,11 @@ const routes = [
   {
     path: "/checkout",
     page: CheckOutPage,
+  },
+  {
+    path: "/checkout-success",
+    page: CheckoutSuccess,
+    layout: DefaultLayout,
   },
   {
     path: "/order-success",

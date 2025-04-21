@@ -17,8 +17,8 @@ import logo from "../../assets/images/logo.png";
 import { useNavigate } from "react-router-dom";
 import { useMutationHooks } from "../../hooks/useMutationHooks";
 import { setOrderInfo } from "../../redux/slides/orderSlice";
-
 import * as OrderService from "../../services/OrderService";
+import * as PaymentService from "../../services/PaymentService";
 
 const cx = classNames.bind(styles);
 
@@ -47,7 +47,6 @@ const CheckOutPage = () => {
   const paymentMethod = Form.useWatch("paymentMethod", form);
 
   const feeShipping = useMemo(() => {
-    if (paymentMethod === "online") return 0;
     if (!selectedProvince) return 30000;
     return selectedProvince.name?.toLowerCase().includes("hà nội")
       ? 10000
@@ -93,17 +92,46 @@ const CheckOutPage = () => {
   };
 
   const onFinish = (values) => {
-    const { province, ...rest } = values;
-    mutation.mutate({
+    const { province, ward, district, fullName, phone, address, ...rest } =
+      values;
+    const payload = {
       token: user?.access_token,
       orderItems: order?.orderItems,
-      city: province,
+      shippingAddress: {
+        fullName,
+        phone,
+        address,
+        ward,
+        district,
+        city: province,
+      },
       shippingPrice: feeShipping,
       totalPrice: totalPrice + feeShipping,
       itemsPrice: totalPrice,
       user: user?.id,
       ...rest,
-    });
+    };
+    if (paymentMethod === "cod") {
+      mutation.mutate(payload);
+    } else {
+      localStorage.setItem(
+        "orderInfo",
+        JSON.stringify({
+          created: false,
+          data: payload,
+        })
+      );
+      const handle = async () => {
+        const res = await PaymentService.createPayment(
+          totalPrice + feeShipping,
+          "VNPAYQR"
+        );
+        if (res?.paymentUrl) {
+          window.location.href = res?.paymentUrl;
+        }
+      };
+      handle();
+    }
   };
 
   return (

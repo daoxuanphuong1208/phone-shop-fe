@@ -4,6 +4,7 @@ import classNames from "classnames/bind";
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
 import styles from "./OrderDetail.module.scss";
 import * as OrderService from "../../services/OrderService";
+import { format } from "date-fns";
 
 const cx = classNames.bind(styles);
 
@@ -85,7 +86,10 @@ const OrderDetail = () => {
           <strong>Trạng thái thanh toán:</strong>{" "}
           <span className={cx({ pending: !order.isPaid, paid: order.isPaid })}>
             {order.isPaid
-              ? `Đã thanh toán lúc ${order.paidAt}`
+              ? `Đã thanh toán lúc ${format(
+                  new Date(order.paidAt),
+                  "dd/MM/yyyy HH:mm:ss"
+                )}`
               : "Chưa thanh toán"}
           </span>
         </p>
