@@ -24,31 +24,29 @@ const HomePage = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
 
-    const fetchCategories = async () => {
+    const fetchData = async () => {
       try {
-        const res = await CategoriesService.getAllCategories();
-        if (res?.data) {
-          setCategories(res.data);
-          setTotalCategory(res.totalCategory || res.data.length);
+        const [resCategories, resSliders] = await Promise.all([
+          CategoriesService.getAllCategories(),
+          SliderService.getAllSliders(),
+        ]);
+
+        if (resCategories?.data) {
+          setCategories(resCategories.data);
+          setTotalCategory(
+            resCategories.totalCategory || resCategories.data.length
+          );
+        }
+
+        if (resSliders?.data) {
+          setSliders(resSliders.data);
         }
       } catch (err) {
-        console.error("Lỗi fetch danh mục:", err);
+        console.error("Lỗi khi fetch dữ liệu:", err);
       }
     };
 
-    const fetchSliders = async () => {
-      try {
-        const res = await SliderService.getAllSliders();
-        if (res?.data) {
-          setSliders(res.data);
-        }
-      } catch (err) {
-        console.error("Lỗi fetch slider:", err);
-      }
-    };
-
-    fetchCategories();
-    fetchSliders();
+    fetchData();
   }, []);
 
   const arrService = [
@@ -98,12 +96,10 @@ const HomePage = () => {
     },
   ];
 
-  console.log(sliders);
-
   return (
     <main className={cx("wrapper")}>
       <div className="container">
-        <Slider arrImages={sliders} />
+        {sliders.some((s) => s.status) && <Slider arrImages={sliders} />}
         <div className={cx("service")}>
           {arrService.map((image, index) => (
             <ServiceCard

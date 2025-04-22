@@ -13,6 +13,14 @@ export const createSlider = async (data) => {
   return res.data;
 };
 
+export const updateSlider = async (id, data) => {
+  const res = await axios.put(
+    `${process.env.REACT_APP_API_URL}/slider/update/${id}`,
+    data
+  );
+  return res.data;
+};
+
 export const deleteSlider = async (id) => {
   const res = await axios.delete(
     `${process.env.REACT_APP_API_URL}/slider/delete/${id}`

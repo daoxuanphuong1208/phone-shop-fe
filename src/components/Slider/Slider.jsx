@@ -57,32 +57,31 @@ function PrevArrow(props) {
   );
 }
 
-const SliderComponent = (props) => {
-  const { arrImages } = props;
+const SliderComponent = ({ arrImages }) => {
+  const activeSlides = arrImages.filter((img) => img?.status);
   const settings = {
-    infinite: true,
+    infinite: activeSlides.length > 1,
     slidesToShow: 1,
     slidesToScroll: 1,
-    autoplay: true,
+    autoplay: activeSlides.length > 1,
     autoplaySpeed: 3000,
     speed: 800,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
   };
+
   return (
     <Slider className={cx("wrapper")} {...settings}>
-      {arrImages.map((image, index) => {
-        return (
-          <Image
-            preview={false}
-            width="100%"
-            height="460px"
-            src={image}
-            key={index}
-            alt={`slider ${index}`}
-          />
-        );
-      })}
+      {activeSlides.map((image, index) => (
+        <Image
+          preview={false}
+          width="100%"
+          height="460px"
+          src={image.image}
+          key={index}
+          alt={`slider ${index}`}
+        />
+      ))}
     </Slider>
   );
 };
