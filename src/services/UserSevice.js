@@ -44,6 +44,11 @@ export const getDetailsUser = async (id, access_token) => {
   return res.data;
 };
 
+export const getAllUsers = async () => {
+  const res = await axios.get(`${process.env.REACT_APP_API_URL}/user/getAll`);
+  return res.data;
+};
+
 export const refreshToken = async () => {
   const res = await axios.post(
     `${process.env.REACT_APP_API_URL}/user/refresh-token`,
@@ -71,6 +76,13 @@ export const forgotPassword = async (data) => {
   const res = await axios.post(
     `${process.env.REACT_APP_API_URL}/user/forgot-password`,
     data
+  );
+  return res.data;
+};
+
+export const deleteUser = async (id) => {
+  const res = await axios.delete(
+    `${process.env.REACT_APP_API_URL}/user/delete-user/${id}`
   );
   return res.data;
 };
