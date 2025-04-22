@@ -22,8 +22,8 @@ const CardProduct = ({ product }) => {
         alt="product"
       />
       <div className={cx("content")}>
-        <span className={cx("sales")}>-19%</span>
-        <span className={cx("badge")}>Sản phẩm MỚI</span>
+        <span className={cx("sales")}>-{product.discount}%</span>
+        <span className={cx("badge")}>{product.status}</span>
         <div
           onClick={() => navigate(`/product-details/${product._id}`)}
           className={cx("name")}
@@ -39,7 +39,9 @@ const CardProduct = ({ product }) => {
               })}
             </span>
             <span className={cx("compare-price")}>
-              {Number(product.price).toLocaleString("vi-VN", {
+              {Number(
+                product.price * (1 - product.discount / 100)
+              ).toLocaleString("vi-VN", {
                 style: "currency",
                 currency: "VND",
               })}
@@ -50,12 +52,10 @@ const CardProduct = ({ product }) => {
           </div>
         </div>
         <div className={cx("status")}>
-          Tình trạng: Mới 99%
+          Đã bán {product.quantitySold}
           <span></span>
         </div>
-        <div className={cx("gift")}>
-          Tặng Sạc cáp nhanh 20w giới hạn trị giá 250k
-        </div>
+        <div className={cx("gift")}>{product.gift}</div>
         <StarRating rating={product.rating} />
       </div>
     </div>

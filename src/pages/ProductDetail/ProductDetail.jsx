@@ -141,18 +141,24 @@ const ProductDetail = () => {
           <div className={cx("compare-price")}>
             Giá thị trường:{" "}
             <span>
-              {Number(product.price).toLocaleString("vi-VN", {
+              {Number(
+                product.price * (1 - product.discount / 100)
+              ).toLocaleString("vi-VN", {
                 style: "currency",
                 currency: "VND",
               })}
             </span>
           </div>
           <div className={cx("status")}>
-            Tình trạng: <span>Mới 99%</span>
+            Tình trạng: <span>{product?.status}</span>
           </div>
+          <div className={cx("quantity-sold")}>
+            Đã bán: <span>{product?.quantitySold}</span>
+          </div>
+
           <div className={cx("gift")}>
             <div>Quà tặng khuyến mãi</div>
-            <span>Tặng Sạc cáp nhanh 20w giới hạn trị giá 250k</span>
+            <span>{product?.gift}</span>
           </div>
           <div className={cx("count")}>
             <div
@@ -189,6 +195,7 @@ const ProductDetail = () => {
         </div>
         <div className={cx("content-config")}>
           <BoxWrapper
+            title="Chính sách"
             icons={[
               <img
                 width="30px"
@@ -215,7 +222,7 @@ const ProductDetail = () => {
                 alt="product details warranty"
               />,
             ]}
-            titles={[
+            items={[
               "Miễn phí vận chuyển bán kính 5km",
               "Bảo hành chính hãng toàn quốc",
               "Cam kết chính hãng 100%",
@@ -223,8 +230,25 @@ const ProductDetail = () => {
             ]}
           />
           <BoxWrapper
-            icons={["RAM", "ROM", "PIN", "MANUFACTURER", "OS", "SIZE"]}
-            titles={["16GB", "128GB", "4000mAh", "Apple", "iOS", "6.7 inch"]}
+            title="Cấu hình máy"
+            icons={[
+              "Kích thước màn hình:",
+              "Camera trước:",
+              "Camera sau:",
+              "Chip:",
+              "RAM:",
+              "Bộ nhớ:",
+              "Dung lượng pin:",
+            ]}
+            items={[
+              `${product?.screen_size}"`,
+              `${product?.before_camera} MP`,
+              `${product?.after_camera} MP`,
+              `${product?.chipset}`,
+              `${product?.ram}GB`,
+              `${product?.storage}GB`,
+              `${product?.battery} mAh`,
+            ]}
           />
         </div>
       </div>

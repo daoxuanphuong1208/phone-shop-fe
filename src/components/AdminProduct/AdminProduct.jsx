@@ -150,7 +150,7 @@ const AdminProduct = () => {
       if (editingProduct) {
         const payload = {
           ...values,
-          image: imageBase64 || editingProduct.image, // nếu không chọn ảnh mới thì giữ ảnh cũ
+          image: imageBase64 || editingProduct.image,
         };
         updateMutation.mutate({
           id: editingProduct._id,
@@ -204,7 +204,14 @@ const AdminProduct = () => {
       sorter: (a, b) => a.name.length - b.name.length,
     },
     { title: "Tên", dataIndex: "name" },
-    { title: "Danh mục", dataIndex: "categoryId" },
+    {
+      title: "Danh mục",
+      dataIndex: "categoryId",
+      render: (categoryId) => {
+        const category = categories.find((c) => c._id === categoryId);
+        return category ? category.name : "Không rõ";
+      },
+    },
     { title: "Giá", dataIndex: "price" },
     { title: "Số lượng", dataIndex: "countInStock" },
     { title: "Sao", dataIndex: "rating" },
@@ -239,6 +246,7 @@ const AdminProduct = () => {
           </Button>
         </div>
         <Modal
+          width={800}
           title={editMode ? "Chỉnh sửa sản phẩm" : "Thêm sản phẩm"}
           open={isModalOpen}
           onOk={editMode ? handleEditProduct : handleAddProduct}
@@ -247,14 +255,16 @@ const AdminProduct = () => {
           okText={editMode ? "Cập nhật" : "Thêm sản phẩm"}
           cancelText="Hủy bỏ"
         >
-          <Form form={form} name="form-product">
+          <Form form={form} name="form-product" layout="vertical">
             <Form.Item
               name="name"
+              label="Tên sản phẩm"
               rules={[{ required: true, message: "Vui lòng nhập tên!" }]}
             >
               <Input placeholder="Tên sản phẩm" />
             </Form.Item>
-            <Form.Item label="Ảnh sản phẩm">
+
+            <Form.Item label="Ảnh sản phẩm" required>
               <Upload
                 accept="image/*"
                 showUploadList={false}
@@ -270,11 +280,14 @@ const AdminProduct = () => {
                   alt="product"
                   width={100}
                   height={100}
+                  style={{ marginTop: 8 }}
                 />
               )}
             </Form.Item>
+
             <Form.Item
               name="categoryId"
+              label="Danh mục"
               rules={[{ required: true, message: "Vui lòng chọn danh mục!" }]}
             >
               <Select placeholder="Danh mục">
@@ -285,29 +298,87 @@ const AdminProduct = () => {
                 ))}
               </Select>
             </Form.Item>
+
             <Form.Item
               name="price"
+              label="Giá"
               rules={[{ required: true, message: "Vui lòng nhập giá!" }]}
             >
-              <Input placeholder="Giá sản phẩm" />
+              <Input type="number" placeholder="Giá sản phẩm" />
             </Form.Item>
+
             <Form.Item
               name="countInStock"
+              label="Số lượng"
               rules={[{ required: true, message: "Vui lòng nhập số lượng!" }]}
             >
-              <Input placeholder="Số lượng" />
+              <Input type="number" placeholder="Số lượng" />
             </Form.Item>
+
+            <Form.Item
+              name="status"
+              label="Tình trạng"
+              rules={[
+                { required: true, message: "Vui lòng nhập tình trạng máy!" },
+              ]}
+            >
+              <Input type="string" placeholder="Tình trạng máy" />
+            </Form.Item>
+
+            <Form.Item name="discount" label="Giảm giá (%)">
+              <Input type="number" placeholder="Phần trăm giảm giá" />
+            </Form.Item>
+
+            <Form.Item
+              name="gift"
+              label="Quà tặng"
+              rules={[{ required: true, message: "Vui lòng nhập quà tặng!" }]}
+            >
+              <Input placeholder="Quà tặng kèm" />
+            </Form.Item>
+
             <Form.Item
               name="rating"
+              label="Sao đánh giá"
               rules={[{ required: true, message: "Vui lòng nhập sao!" }]}
             >
-              <Input placeholder="Sao" />
+              <Input type="number" placeholder="Sao đánh giá (1 - 5)" />
             </Form.Item>
+
             <Form.Item
               name="description"
+              label="Mô tả"
               rules={[{ required: true, message: "Vui lòng nhập mô tả!" }]}
             >
-              <Input placeholder="Mô tả" />
+              <Input.TextArea rows={4} placeholder="Mô tả sản phẩm" />
+            </Form.Item>
+
+            <Form.Item name="screen_size" label="Kích thước màn hình">
+              <Input placeholder="6.5 inch, ..." />
+            </Form.Item>
+
+            <Form.Item name="before_camera" label="Camera trước">
+              <Input placeholder="12MP, ..." />
+            </Form.Item>
+
+            <Form.Item name="after_camera" label="Camera sau">
+              <Input placeholder="50MP + 12MP, ..." />
+            </Form.Item>
+
+            <Form.Item name="chipset" label="Chipset">
+              <Input placeholder="Snapdragon 8 Gen 2, ..." />
+            </Form.Item>
+
+            <Form.Item name="ram" label="RAM">
+              <Input placeholder="8GB, ..." />
+            </Form.Item>
+
+            <Form.Item name="storage" label="Bộ nhớ trong">
+              <Input placeholder="128GB, 256GB, ..." />
+            </Form.Item>
+
+            <Form.Item name="battery" label="Dung lượng pin">
+              <Input placeholder="5000mAh, ..." />
             </Form.Item>
           </Form>
         </Modal>
