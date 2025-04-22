@@ -117,9 +117,6 @@ const Profile = () => {
               <Form.Item name="phone" label="Điện thoại">
                 <Input />
               </Form.Item>
-              <Form.Item name="address" label="Địa chỉ">
-                <Input.TextArea />
-              </Form.Item>
               <Form.Item label={null}>
                 <Button type="primary" htmlType="submit">
                   Cập nhật
