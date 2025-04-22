@@ -7,24 +7,23 @@ import ServiceCard from "../../components/ServiceCard/ServiceCard";
 import FrameProduct from "../../components/FrameProduct/FrameProduct";
 import News from "../../components/News/News";
 
-import slider_1 from "../../assets/images/slider_1.webp";
-import slider_2 from "../../assets/images/slider_2.webp";
-import slider_3 from "../../assets/images/slider_3.webp";
-
 import service_1 from "../../assets/images/service_1.webp";
 import service_2 from "../../assets/images/service_2.png";
 import service_3 from "../../assets/images/service_3.png";
 import service_4 from "../../assets/images/service_4.png";
 import * as CategoriesService from "../../services/CategoriesService";
+import * as SliderService from "../../services/SliderService";
 
 const cx = classNames.bind(styles);
 
 const HomePage = () => {
   const [categories, setCategories] = useState([]);
   const [totalCategory, setTotalCategory] = useState(0);
+  const [sliders, setSliders] = useState([]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
+
     const fetchCategories = async () => {
       try {
         const res = await CategoriesService.getAllCategories();
@@ -37,10 +36,20 @@ const HomePage = () => {
       }
     };
 
-    fetchCategories();
-  }, []);
+    const fetchSliders = async () => {
+      try {
+        const res = await SliderService.getAllSliders();
+        if (res?.data) {
+          setSliders(res.data);
+        }
+      } catch (err) {
+        console.error("Lỗi fetch slider:", err);
+      }
+    };
 
-  const arrImages = [slider_1, slider_2, slider_3];
+    fetchCategories();
+    fetchSliders();
+  }, []);
 
   const arrService = [
     {
@@ -89,11 +98,12 @@ const HomePage = () => {
     },
   ];
 
+  console.log(sliders);
+
   return (
     <main className={cx("wrapper")}>
       <div className="container">
-        <Slider arrImages={arrImages} />
-
+        <Slider arrImages={sliders} />
         <div className={cx("service")}>
           {arrService.map((image, index) => (
             <ServiceCard
