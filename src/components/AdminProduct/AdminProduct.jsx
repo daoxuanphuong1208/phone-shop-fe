@@ -11,7 +11,12 @@ import {
   Select,
   Upload,
 } from "antd";
-import { PlusOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import {
+  PlusOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  ExportOutlined,
+} from "@ant-design/icons";
 import classNames from "classnames/bind";
 import { getBase64 } from "../../utils";
 import styles from "./AdminProduct.module.scss";
@@ -21,7 +26,7 @@ import Loading from "../../components/Loading/Loading";
 import * as ProductService from "../../services/ProductService";
 import * as CategoriesService from "../../services/CategoriesService";
 import { useMutationHooks } from "../../hooks/useMutationHooks";
-
+import { Excel } from "antd-table-saveas-excel";
 const cx = classNames.bind(styles);
 
 const AdminProduct = () => {
@@ -235,15 +240,76 @@ const AdminProduct = () => {
     },
   ];
 
+  const handleExport = () => {
+    const exportColumns = [
+      { title: "Tên", dataIndex: "name" },
+      { title: "Ảnh", dataIndex: "image" },
+      { title: "Giá", dataIndex: "price" },
+      { title: "Số lượng", dataIndex: "countInStock" },
+      { title: "Đã bán", dataIndex: "quantitySold" },
+      { title: "Giảm giá (%)", dataIndex: "discount" },
+      { title: "Quà tặng", dataIndex: "gift" },
+      { title: "Sao", dataIndex: "rating" },
+      { title: "Mô tả", dataIndex: "description" },
+      { title: "Trạng thái", dataIndex: "status" },
+      { title: "Danh mục", dataIndex: "categoryName" },
+      { title: "Màn hình", dataIndex: "screen_size" },
+      { title: "Camera trước", dataIndex: "before_camera" },
+      { title: "Camera sau", dataIndex: "after_camera" },
+      { title: "Chip", dataIndex: "chipset" },
+      { title: "RAM", dataIndex: "ram" },
+      { title: "Bộ nhớ", dataIndex: "storage" },
+      { title: "Pin", dataIndex: "battery" },
+    ];
+
+    const dataSource = products.map((item) => ({
+      name: item.name,
+      image: item.image,
+      price: item.price,
+      countInStock: item.countInStock,
+      quantitySold: item.quantitySold,
+      discount: item.discount,
+      gift: item.gift,
+      rating: item.rating,
+      description: item.description,
+      status: item.status,
+      categoryName:
+        categories.find((c) => c._id === item.categoryId)?.name || "Không rõ",
+      screen_size: item.screen_size,
+      before_camera: item.before_camera,
+      after_camera: item.after_camera,
+      chipset: item.chipset,
+      ram: item.ram,
+      storage: item.storage,
+      battery: item.battery,
+    }));
+
+    const excel = new Excel();
+    excel
+      .addSheet("Sản phẩm")
+      .addColumns(exportColumns)
+      .addDataSource(dataSource)
+      .saveAs("San_pham.xlsx");
+  };
+
   return (
     <Loading isLoading={loading}>
       <div>
         {contextHolder}
         <div className={cx("header")}>
           <h2>Sản phẩm</h2>
-          <Button type="primary" icon={<PlusOutlined />} onClick={showModal}>
-            Thêm sản phẩm
-          </Button>
+          <div className={cx("actions")}>
+            <Button type="primary" icon={<PlusOutlined />} onClick={showModal}>
+              Thêm sản phẩm
+            </Button>
+            <Button
+              type="default"
+              onClick={handleExport}
+              icon={<ExportOutlined />}
+            >
+              Xuất excel
+            </Button>
+          </div>
         </div>
         <Modal
           width={800}
