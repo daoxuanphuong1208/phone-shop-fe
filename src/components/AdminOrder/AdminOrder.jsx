@@ -8,10 +8,11 @@ import {
   Modal,
   Popconfirm,
 } from "antd";
-import { DeleteOutlined } from "@ant-design/icons";
-import { useEffect, useState } from "react";
+import { DeleteOutlined, PrinterOutlined } from "@ant-design/icons";
+import { useEffect, useState, useRef } from "react";
 import * as OrderService from "../../services/OrderService";
 import Loading from "../../components/Loading/Loading";
+import { useReactToPrint } from "react-to-print";
 
 const AdminOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -136,6 +137,132 @@ const AdminOrders = () => {
     return <Tag color={statusColors[status]}>{statusLabels[status]}</Tag>;
   };
 
+  const fetchAddressNames = async (address) => {
+    try {
+      // Lấy dữ liệu từ API
+      const res = await fetch("https://provinces.open-api.vn/api/?depth=3");
+      const provinces = await res.json();
+
+      // Tìm thành phố theo mã city
+      const city = provinces.find(
+        (province) => province.code === parseInt(address.city)
+      );
+      if (!city) {
+        console.log("Không tìm thấy thành phố với code:", address.city);
+      }
+
+      // Tìm quận huyện theo mã district trong city
+      const district = city?.districts.find(
+        (district) => district.code === parseInt(address.district)
+      );
+      if (!district) {
+        console.log("Không tìm thấy quận huyện với code:", address.district);
+      }
+
+      // Tìm phường theo mã ward trong district
+      const ward = district?.wards.find(
+        (ward) => ward.code === parseInt(address.ward)
+      );
+      if (!ward) {
+        console.log("Không tìm thấy phường với code:", address.ward);
+      }
+
+      // Trả về tên địa chỉ hoặc "Không xác định" nếu không tìm thấy
+      return {
+        city: city?.name || "Không xác định",
+        district: district?.name || "Không xác định",
+        ward: ward?.name || "Không xác định",
+      };
+    } catch (error) {
+      console.error("Lỗi khi lấy thông tin địa chỉ:", error);
+      return {
+        city: "Không xác định",
+        district: "Không xác định",
+        ward: "Không xác định",
+      };
+    }
+  };
+
+  const handlePrintOrder = async (order) => {
+    const addressNames = await fetchAddressNames(order.shippingAddress);
+    const printWindow = window.open("", "_blank");
+    if (!printWindow) {
+      messageApi.error("Trình duyệt chặn popup!");
+      return;
+    }
+    const htmlContent = `
+      <html>
+        <head>
+          <title>Hóa đơn bán hàng</title>
+          <style>
+            body { font-family: Arial, sans-serif; padding: 20px; }
+            h1 { text-align: center; }
+            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+            th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+            .info, .customer-info { margin-top: 20px; }
+          </style>
+        </head>
+        <body>
+          <h1>HÓA ĐƠN BÁN HÀNG</h1>
+          <div class="info">
+            <div><strong>Mã đơn hàng:</strong> ${order._id}</div>
+            <div><strong>Ngày tạo:</strong> ${new Date(
+              order.createdAt
+            ).toLocaleString()}</div>
+          </div>
+          <div class="customer-info">
+            <h3>Thông tin khách hàng</h3>
+            <p><strong>Họ tên:</strong> ${order.shippingAddress?.fullName}</p>
+            <p><strong>Địa chỉ:</strong> ${order.shippingAddress?.address}, ${
+      addressNames.ward
+    }, ${addressNames.district}, ${addressNames.city}</p>
+            <p><strong>Số điện thoại:</strong> ${
+              order.shippingAddress?.phone
+            }</p>
+          </div>
+          <h3>Danh sách sản phẩm</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Tên sản phẩm</th>
+                <th>Số lượng</th>
+                <th>Đơn giá</th>
+                <th>Thành tiền</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${order.orderItems
+                .map(
+                  (item) => `
+                <tr>
+                  <td>${item.name}</td>
+                  <td>${item.amount}</td>
+                  <td>${item.price.toLocaleString()}₫</td>
+                  <td>${(item.price * item.amount).toLocaleString()}₫</td>
+                </tr>
+              `
+                )
+                .join("")}
+            </tbody>
+          </table>
+          <h3 style="text-align:right;">Tổng tiền: ${order.totalPrice.toLocaleString()}₫</h3>
+          <p style="text-align:right;">${
+            order.isPaid ? "Đã thanh toán" : "Chưa thanh toán"
+          }</p>
+          <script>
+            window.onload = () => {
+              window.print();
+            };
+          </script>
+        </body>
+      </html>
+    `;
+
+    printWindow.document.open();
+    printWindow.document.write(htmlContent);
+    printWindow.document.close();
+  };
+
   const columns = [
     {
       title: "Khách hàng",
@@ -210,19 +337,36 @@ const AdminOrders = () => {
 
         if (orderStatus === "processing" || orderStatus === "shipped") {
           return (
-            <Select
-              value={orderStatus}
-              onChange={(value) => handleStatusChange(record._id, value)}
-              style={{ width: 150 }}
-            >
-              <Select.Option value="processing">Đang xử lý</Select.Option>
-              <Select.Option value="shipped">Đã gửi hàng</Select.Option>
-              <Select.Option value="delivered">Đã giao</Select.Option>
-            </Select>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <Select
+                value={orderStatus}
+                onChange={(value) => handleStatusChange(record._id, value)}
+                style={{ width: 150 }}
+              >
+                <Select.Option value="processing">Đang xử lý</Select.Option>
+                <Select.Option value="shipped">Đã gửi hàng</Select.Option>
+                <Select.Option value="delivered">Đã giao</Select.Option>
+              </Select>
+            </div>
           );
         }
 
-        if (orderStatus === "delivered" || orderStatus === "cancelled") {
+        if (orderStatus === "delivered") {
+          return (
+            <Button
+              type="default"
+              onClick={() => {
+                handlePrintOrder(record);
+              }}
+              icon={<PrinterOutlined />}
+              style={{ marginLeft: 8 }}
+            >
+              In hóa đơn
+            </Button>
+          );
+        }
+
+        if (orderStatus === "cancelled") {
           return (
             <Popconfirm
               title="Bạn chắc chắn muốn xóa?"
