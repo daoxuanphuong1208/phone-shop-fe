@@ -26,6 +26,21 @@ export const getAllOrders = async (userId) => {
   return result;
 };
 
+export const getAllOrdersByAdmin = async () => {
+  const res = await fetch(
+    `${process.env.REACT_APP_API_URL}/order/getAllOrdersByAdmin`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  const result = await res.json();
+  return result;
+};
+
 export const getOrderDetail = async (orderId) => {
   const res = await fetch(
     `${process.env.REACT_APP_API_URL}/order/getOrderDetail/${orderId}`,
@@ -40,9 +55,38 @@ export const getOrderDetail = async (orderId) => {
   return result;
 };
 
-export const cancelOrder = async (orderId) => {
+export const updateOrderStatus = async (orderId, data) => {
   const res = await fetch(
-    `${process.env.REACT_APP_API_URL}/order/cancelOrder/${orderId}`,
+    `${process.env.REACT_APP_API_URL}/order/update/${orderId}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    }
+  );
+  const result = await res.json();
+  return result;
+};
+
+export const cancelOrder = async (id) => {
+  const res = await fetch(
+    `${process.env.REACT_APP_API_URL}/order/cancelOrder/${id}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  const result = await res.json();
+  return result;
+};
+
+export const deleteOrder = async (orderId) => {
+  const res = await fetch(
+    `${process.env.REACT_APP_API_URL}/order/delete/${orderId}`,
     {
       method: "DELETE",
       headers: {

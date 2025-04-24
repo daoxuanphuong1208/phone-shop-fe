@@ -4,7 +4,7 @@ import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
 import styles from "./MyOrder.module.scss";
 import * as OrderService from "../../services/OrderService";
 import { useSelector } from "react-redux";
-import { message, Modal } from "antd";
+import { message, Modal, Tag } from "antd";
 import { useNavigate } from "react-router-dom";
 
 const cx = classNames.bind(styles);
@@ -40,25 +40,54 @@ const MyOrder = () => {
   };
 
   const handleOk = async () => {
-    setConfirmLoading(true);
     try {
+      setConfirmLoading(true);
       const res = await OrderService.cancelOrder(selectedOrderId);
-      if (res.status === "OK") {
-        messageApi.success("Hủy đơn hàng thành công!");
-        const newOrders = orders.filter(
-          (order) => order._id !== selectedOrderId
-        );
-        setOrders(newOrders);
+      if (res?.status === "OK") {
+        messageApi.success(res.message || "Đã gửi yêu cầu hủy!");
+        const updatedOrders = await OrderService.getAllOrders(user?.id);
+        setOrders(updatedOrders?.data || []);
       } else {
-        messageApi.error("Đã có lỗi xảy ra khi hủy đơn hàng.");
+        messageApi.warning(res.message || "Không thể hủy đơn hàng.");
       }
+      setConfirmLoading(false);
     } catch (error) {
-      messageApi.error("Không thể kết nối tới máy chủ.");
+      messageApi.error("Lỗi gửi yêu cầu hủy đơn hàng");
     } finally {
       setConfirmLoading(false);
       setOpen(false);
       setSelectedOrderId(null);
     }
+  };
+
+  const getOrderStatusTag = (order) => {
+    if (order.orderStatus === "cancelled") {
+      return { text: "Đã hủy", color: "red" };
+    }
+    if (order.cancelRequest) {
+      return { text: "Đã yêu cầu hủy", color: "orange" };
+    }
+    switch (order.orderStatus) {
+      case "pending":
+        return { text: "Chờ xác nhận", color: "geekblue" };
+      case "processing":
+        return { text: "Đang xử lý", color: "orange" };
+      case "shipped":
+        return { text: "Đã gửi hàng", color: "blue" };
+      case "delivered":
+        return { text: "Đã giao", color: "green" };
+      default:
+        return { text: "Không xác định", color: "default" };
+    }
+  };
+
+  const getPaymentStatusTag = (order) => {
+    if (order.isRefunded) {
+      return { text: "Đã hoàn tiền", color: "blue" };
+    }
+    return order.isPaid
+      ? { text: "Đã thanh toán", color: "green" }
+      : { text: "Chưa thanh toán", color: "red" };
   };
 
   return (
@@ -77,13 +106,17 @@ const MyOrder = () => {
         orders.map((order) => (
           <div className={cx("order-card")} key={order._id}>
             <div className={cx("status")}>
-              <h3>Trạng thái</h3>
               <div className={cx("shipping")}>
-                Giao hàng:{" "}
-                {order.isDelivered ? "Đã giao hàng" : "Chưa giao hàng"}
+                Trạng thái:{" "}
+                <Tag color={getOrderStatusTag(order).color}>
+                  {getOrderStatusTag(order).text}
+                </Tag>
               </div>
               <div className={cx("payment")}>
-                Thanh toán: {order.isPaid ? "Đã thanh toán" : "Chưa thanh toán"}
+                Thanh toán:{" "}
+                <Tag color={getPaymentStatusTag(order).color}>
+                  {getPaymentStatusTag(order).text}
+                </Tag>
               </div>
               {order.isCanceled && (
                 <div className={cx("canceled")}>Đơn hàng đã hủy</div>
@@ -113,7 +146,8 @@ const MyOrder = () => {
             </div>
 
             <div className={cx("actions")}>
-              {!order.isCanceled && (
+              {(order.orderStatus === "pending" ||
+                order.orderStatus === "processing") && (
                 <button onClick={() => showCancelModal(order._id)}>
                   Hủy đơn hàng
                 </button>

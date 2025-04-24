@@ -5,6 +5,7 @@ import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
 import styles from "./OrderDetail.module.scss";
 import * as OrderService from "../../services/OrderService";
 import { format } from "date-fns";
+import { Tag } from "antd";
 
 const cx = classNames.bind(styles);
 
@@ -63,6 +64,38 @@ const OrderDetail = () => {
 
   if (!order) return null;
 
+  const getOrderStatusTag = (order) => {
+    if (order.orderStatus === "cancelled") {
+      return { text: "Đã hủy", color: "red" };
+    }
+
+    if (order.cancelRequest) {
+      return { text: "Đã yêu cầu hủy", color: "orange" };
+    }
+
+    switch (order.orderStatus) {
+      case "pending":
+        return { text: "Chờ xác nhận", color: "geekblue" };
+      case "processing":
+        return { text: "Đang xử lý", color: "orange" };
+      case "shipped":
+        return { text: "Đã gửi hàng", color: "blue" };
+      case "delivered":
+        return { text: "Đã giao", color: "green" };
+      default:
+        return { text: "Không xác định", color: "default" };
+    }
+  };
+
+  const getPaymentStatusTag = (order) => {
+    if (order.isRefunded) {
+      return { text: "Đã hoàn tiền", color: "blue" };
+    }
+    return order.isPaid
+      ? { text: "Đã thanh toán", color: "green" }
+      : { text: "Chưa thanh toán", color: "red" };
+  };
+
   return (
     <div className={cx("wrapper", "container")}>
       <Breadcrumb breadcrumFirst={{ label: "Chi tiết đơn hàng" }} />
@@ -70,27 +103,26 @@ const OrderDetail = () => {
 
       <div className={cx("status")}>
         <p>
-          <strong>Trạng thái giao hàng:</strong>{" "}
-          <span
-            className={cx({
-              pending: !order?.isDelivered,
-              delivered: order?.isDelivered,
-            })}
-          >
-            {order.isDelivered
-              ? `Đã giao lúc ${order.deliveredAt}`
-              : "Chưa giao hàng"}
+          <strong>Trạng thái:</strong>{" "}
+          <span>
+            <Tag color={getOrderStatusTag(order).color}>
+              {getOrderStatusTag(order).text}
+            </Tag>
           </span>
         </p>
         <p>
-          <strong>Trạng thái thanh toán:</strong>{" "}
-          <span className={cx({ pending: !order.isPaid, paid: order.isPaid })}>
-            {order.isPaid
-              ? `Đã thanh toán lúc ${format(
-                  new Date(order.paidAt),
-                  "dd/MM/yyyy HH:mm:ss"
-                )}`
-              : "Chưa thanh toán"}
+          <strong>Thanh toán:</strong>{" "}
+          <span>
+            {
+              <Tag color={getPaymentStatusTag(order).color}>
+                {getPaymentStatusTag(order).text}
+                {order.isPaid ?? (
+                  <>
+                    lúc {format(new Date(order.paidAt), "dd/MM/yyyy HH:mm:ss")}
+                  </>
+                )}
+              </Tag>
+            }
           </span>
         </p>
       </div>
