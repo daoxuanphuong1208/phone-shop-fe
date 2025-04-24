@@ -3,7 +3,6 @@ import {
   UserOutlined,
   ShoppingCartOutlined,
   SlidersOutlined,
-  ContainerOutlined,
   AreaChartOutlined,
   SnippetsOutlined,
   ContactsOutlined,
@@ -16,7 +15,6 @@ import AdminUser from "../../components/AdminUser/AdminUser";
 import AdminProduct from "../../components/AdminProduct/AdminProduct";
 import AdminOrder from "../../components/AdminOrder/AdminOrder";
 import AdminSlider from "../../components/AdminSlider/AdminSlider";
-import AdminNews from "../../components/AdminNews/AdminNews";
 import AdminCategories from "../../components/AdminCategories/AdminCategories";
 import AdminStatistical from "../../components/AdminStatistical/AdminStatistical";
 import AdminContact from "../../components/AdminContact/AdminContact";
@@ -28,7 +26,7 @@ const cx = classNames.bind(styles);
 const items = [
   {
     key: "1",
-    label: "Thống kê",
+    label: "Trang chủ",
     icon: <AreaChartOutlined />,
   },
   {
@@ -68,19 +66,11 @@ const items = [
   },
   {
     key: "6",
-    label: "Quản lý tin tức",
-    icon: <ContainerOutlined />,
-  },
-  {
-    type: "divider",
-  },
-  {
-    key: "7",
     label: "Quản lý slider",
     icon: <SlidersOutlined />,
   },
   {
-    key: "8",
+    key: "7",
     label: "Quản lý liên hệ",
     icon: <ContactsOutlined />,
   },
@@ -102,10 +92,8 @@ const AdminPage = () => {
       case "5":
         return <AdminCategories />;
       case "6":
-        return <AdminNews />;
-      case "7":
         return <AdminSlider />;
-      case "8":
+      case "7":
         return <AdminContact />;
       default:
         return <>Không có dữ liệu</>;
