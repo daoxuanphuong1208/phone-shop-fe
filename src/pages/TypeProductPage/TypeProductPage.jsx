@@ -1,9 +1,8 @@
 import classNames from "classnames/bind";
 import styles from "./TypeProductPage.module.scss";
-import { Pagination } from "antd";
+import { Pagination, Checkbox } from "antd";
 
 import ProductList from "../../components/ProductList/ProductList";
-import BoxWrapper from "../../components/BoxWrapper/BoxWrapper";
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
 import { useEffect, useState } from "react";
 import * as ProductService from "../../services/ProductService";
@@ -21,7 +20,7 @@ const TypeProductPage = () => {
     limit: 8,
     total: 0,
   });
-
+  const [priceFilter, setPriceFilter] = useState([]);
   const fetchProducts = async () => {
     setLoading(true);
     try {
@@ -33,6 +32,10 @@ const TypeProductPage = () => {
       if (searchProduct) {
         params.filter = "categoryId";
         params.search = searchProduct;
+      }
+
+      if (priceFilter.length > 0) {
+        params.priceFilter = priceFilter;
       }
 
       const res = await ProductService.getAllProduct(params);
@@ -55,7 +58,7 @@ const TypeProductPage = () => {
 
   useEffect(() => {
     fetchProducts();
-  }, [pagination.page, searchProduct]);
+  }, [pagination.page, searchProduct, priceFilter]);
 
   useEffect(() => {
     setPagination((prev) => ({
@@ -71,14 +74,30 @@ const TypeProductPage = () => {
     }));
   };
 
+  const onChangePrice = (checkedValues) => {
+    setPriceFilter(checkedValues);
+  };
+
+  const priceOptions = [
+    { label: "Dưới 2 triệu", value: "under-2m" },
+    { label: "2 - 5 triệu", value: "2m-5m" },
+    { label: "5 - 10 triệu", value: "5m-10m" },
+    { label: "Trên 10 triệu", value: "over-10m" },
+  ];
+
   return (
     <div className={cx("wrapper", "container")}>
       <Breadcrumb />
       <div className={cx("content")}>
-        <div>
-          <BoxWrapper titles={["A", "B", "C", "D", "E", "F"]} />
-          <BoxWrapper titles={["A", "B", "C", "D", "E", "F"]} />
-          <BoxWrapper titles={["A", "B", "C", "D", "E", "F"]} />
+        <div className={cx("filter-container")}>
+          <div className={cx("filter-item")}>
+            <h4 className={cx("filter-title")}>CHỌN MỨC GIÁ</h4>
+            <Checkbox.Group
+              options={priceOptions}
+              onChange={onChangePrice}
+              className={cx("checkbox-group")}
+            />
+          </div>
         </div>
         <div>
           {loading ? (

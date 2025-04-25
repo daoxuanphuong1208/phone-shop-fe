@@ -3,6 +3,7 @@ import axios from "axios";
 export const getAllProduct = async ({
   filter,
   search,
+  priceFilter,
   limit,
   page,
   sort,
@@ -13,6 +14,10 @@ export const getAllProduct = async ({
   if (search) {
     params.search = search;
     params.filter = filter;
+  }
+
+  if (priceFilter && priceFilter.length > 0) {
+    params.priceFilter = priceFilter;
   }
 
   if (limit !== undefined) params.limit = limit;

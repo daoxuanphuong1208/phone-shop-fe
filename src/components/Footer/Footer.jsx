@@ -37,9 +37,9 @@ const Footer = () => {
           <li>
             <a href="/type">Sản phẩm</a>
           </li>
-          <li>
+          {/* <li>
             <a href="/news">Tin tức</a>
-          </li>
+          </li> */}
           <li>
             <a href="/contact">Liên hệ</a>
           </li>
@@ -48,7 +48,14 @@ const Footer = () => {
       <div className={cx("footer-items")}>
         <h2 className={cx("title")}>Theo dõi chúng tôi</h2>
         <div className={cx("content")}>
-          <FacebookFilled className={cx("icon-facebook")} />
+          <FacebookFilled
+            onClick={() =>
+              window.open(
+                "https://www.facebook.com/p/Duyminh-mobile-s%E1%BB%91-8-H%E1%BB%93-T%C3%B9ng-M%E1%BA%ADu-61551090887870/"
+              )
+            }
+            className={cx("icon-facebook")}
+          />
         </div>
       </div>
     </footer>

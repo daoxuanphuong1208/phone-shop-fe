@@ -65,9 +65,9 @@ const Navigation = () => {
             </a>
           </Dropdown>
         </li>
-        <li onClick={() => navigate("/news")} className={cx("nav-item")}>
+        {/* <li onClick={() => navigate("/news")} className={cx("nav-item")}>
           Tin tức
-        </li>
+        </li> */}
         <li onClick={() => navigate("/contact")} className={cx("nav-item")}>
           Liên hệ
         </li>

@@ -120,8 +120,7 @@ const HomePage = () => {
               />
             );
           })}
-
-        <div className={cx("news-wrap")}>
+        {/* <div className={cx("news-wrap")}>
           <h1 className={cx("news")}>Tin tức</h1>
           <hr />
           <div className={cx("news-list")}>
@@ -129,7 +128,7 @@ const HomePage = () => {
             <News />
             <News />
           </div>
-        </div>
+        </div> */}
       </div>
     </main>
   );
