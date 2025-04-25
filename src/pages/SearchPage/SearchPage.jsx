@@ -45,7 +45,9 @@ const SearchPage = () => {
           {products === null ? null : products.length > 0 ? (
             <ProductList products={products} col={5} gap={15} />
           ) : (
-            <h2>Không tìm thấy dữ liệu</h2>
+            <div style={{ textAlign: "center" }}>
+              <h2>Không tìm thấy thông tin tìm kiếm</h2>
+            </div>
           )}
         </Loading>
       </div>

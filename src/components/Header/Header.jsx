@@ -119,7 +119,7 @@ const Header = ({ isHiddenSearch, isHiddenCart }) => {
       if (search.trim()) {
         return;
       }
-      messageApi.warning("Vui lòng nhập thông tin tìm kiếm");
+      messageApi.warning("Bạn cần nhập thông tin tìm kiếm");
       return;
     }
     dispatch(searchProduct(trimmedValue));
@@ -141,7 +141,7 @@ const Header = ({ isHiddenSearch, isHiddenCart }) => {
     {
       key: "1",
       label: (
-        <span onClick={() => navigate("/profile")}>Thông tin người dùng</span>
+        <span onClick={() => navigate("/profile")}>Thông tin tài khoản</span>
       ),
       icon: <InfoCircleOutlined />,
     },
@@ -239,11 +239,7 @@ const Header = ({ isHiddenSearch, isHiddenCart }) => {
         )}
 
         <div className={cx("header-actions")}>
-          {isHiddenCart ? (
-            <div className={cx("back-user-page")} onClick={() => navigate("/")}>
-              Về trang khách hàng
-            </div>
-          ) : (
+          {isHiddenCart ? null : (
             <div onClick={() => navigate("/cart")} className={cx("cart")}>
               <ShoppingOutlined className={cx("icon")} />
               <span className={cx("count")}>{order?.orderItems?.length}</span>

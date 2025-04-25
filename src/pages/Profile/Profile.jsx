@@ -77,7 +77,7 @@ const Profile = () => {
       {contextHolder}
       {user?.isAdmin ? null : <Breadcrumb />}
       <div className={cx("wrapper")}>
-        <h2>Thông tin người dùng</h2>
+        <h2>Thông tin tài khoản</h2>
         <Loading isLoading={isPending}>
           <div className={cx("content")}>
             <div className={cx("avatar-wrap")}>
