@@ -1,5 +1,4 @@
-import { FacebookFilled, GooglePlusSquareFilled } from "@ant-design/icons";
-import { Button, ConfigProvider, Form, Input, message } from "antd";
+import { Button, ConfigProvider, Form, Input, message, Image } from "antd";
 import classNames from "classnames/bind";
 import styles from "./SignInPage.module.scss";
 import { useLocation, useNavigate } from "react-router";
@@ -10,6 +9,7 @@ import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { useDispatch } from "react-redux";
 import { updateUser } from "../../redux/slides/userSlice";
+import logo from "../../assets/images/logo.png";
 
 const cx = classNames.bind(styles);
 
@@ -85,6 +85,19 @@ const SignInPage = () => {
   return (
     <div className={cx("wrapper")}>
       {contextHolder}
+      <div onClick={() => navigate("/")} className={cx("logo")}>
+        <Image
+          width={50}
+          height={50}
+          className={cx("img")}
+          preview={false}
+          src={logo}
+          alt="logo"
+        />
+        <div>
+          Duy Minh <span>Mobile</span>
+        </div>
+      </div>
       <div className={cx("form")}>
         <div className={cx("title")}>Đăng nhập</div>
         <Form

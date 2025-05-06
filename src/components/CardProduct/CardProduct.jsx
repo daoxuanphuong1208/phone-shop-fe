@@ -3,15 +3,32 @@ import classNames from "classnames/bind";
 import styles from "./CardProduct.module.scss";
 import StarRating from "../StarRating/StarRating";
 import { useNavigate } from "react-router";
+import { useDispatch } from "react-redux";
+import { addOrderProduct } from "../../redux/slides/orderSlice";
 
 const cx = classNames.bind(styles);
 
 const CardProduct = ({ product }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   if (product.countInStock === 0) {
     return null;
   }
+
+  const handleAddToCart = () => {
+    dispatch(
+      addOrderProduct({
+        orderItem: {
+          name: product.name,
+          amount: 1,
+          image: product.image,
+          price: product.price,
+          product: product._id,
+        },
+      })
+    );
+  };
 
   return (
     <div className={cx("wrapper")}>
@@ -47,7 +64,7 @@ const CardProduct = ({ product }) => {
               })}
             </span>
           </div>
-          <div className={cx("cart-wrap")}>
+          <div onClick={handleAddToCart} className={cx("cart-wrap")}>
             <ShoppingCartOutlined className={cx("cart-icon")} />
           </div>
         </div>
@@ -55,7 +72,7 @@ const CardProduct = ({ product }) => {
           Đã bán {product.quantitySold}
           <span></span>
         </div>
-        <div className={cx("gift")}>{product.gift}</div>
+        <div className={cx("gift")}>Tặng {product.gift}</div>
         <StarRating rating={product.rating} />
       </div>
     </div>

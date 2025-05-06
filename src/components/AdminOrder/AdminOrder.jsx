@@ -31,7 +31,21 @@ const AdminOrders = () => {
     try {
       setLoading(true);
       const res = await OrderService.getAllOrdersByAdmin();
-      setOrders(res?.data || []);
+      const ordersRaw = res?.data || [];
+
+      const priority = {
+        pending: 1,
+        processing: 2,
+        shipped: 3,
+        delivered: 4,
+        cancelled: 5,
+      };
+
+      const sortedOrders = ordersRaw.sort((a, b) => {
+        return priority[a.orderStatus] - priority[b.orderStatus];
+      });
+
+      setOrders(sortedOrders);
     } catch (error) {
       console.error("Lỗi lấy đơn hàng:", error);
     } finally {
@@ -139,11 +153,9 @@ const AdminOrders = () => {
 
   const fetchAddressNames = async (address) => {
     try {
-      // Lấy dữ liệu từ API
       const res = await fetch("https://provinces.open-api.vn/api/?depth=3");
       const provinces = await res.json();
 
-      // Tìm thành phố theo mã city
       const city = provinces.find(
         (province) => province.code === parseInt(address.city)
       );
@@ -151,7 +163,6 @@ const AdminOrders = () => {
         console.log("Không tìm thấy thành phố với code:", address.city);
       }
 
-      // Tìm quận huyện theo mã district trong city
       const district = city?.districts.find(
         (district) => district.code === parseInt(address.district)
       );
@@ -159,7 +170,6 @@ const AdminOrders = () => {
         console.log("Không tìm thấy quận huyện với code:", address.district);
       }
 
-      // Tìm phường theo mã ward trong district
       const ward = district?.wards.find(
         (ward) => ward.code === parseInt(address.ward)
       );
@@ -167,7 +177,6 @@ const AdminOrders = () => {
         console.log("Không tìm thấy phường với code:", address.ward);
       }
 
-      // Trả về tên địa chỉ hoặc "Không xác định" nếu không tìm thấy
       return {
         city: city?.name || "Không xác định",
         district: district?.name || "Không xác định",

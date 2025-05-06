@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { SliderComponent as Slider } from "../../components/Slider/Slider";
 import ServiceCard from "../../components/ServiceCard/ServiceCard";
 import FrameProduct from "../../components/FrameProduct/FrameProduct";
-import News from "../../components/News/News";
 
 import service_1 from "../../assets/images/service_1.webp";
 import service_2 from "../../assets/images/service_2.png";

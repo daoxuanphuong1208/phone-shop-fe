@@ -206,7 +206,6 @@ const AdminProduct = () => {
           height={100}
         />
       ),
-      sorter: (a, b) => a.name.length - b.name.length,
     },
     { title: "Tên", dataIndex: "name" },
     {
@@ -220,7 +219,7 @@ const AdminProduct = () => {
     { title: "Giá", dataIndex: "price" },
     { title: "Số lượng", dataIndex: "countInStock" },
     { title: "Sao", dataIndex: "rating" },
-    { title: "Mô tả", dataIndex: "description" },
+    { title: "Số lượng bán", dataIndex: "quantitySold" },
     {
       title: "Hoạt động",
       dataIndex: "action",
@@ -356,7 +355,7 @@ const AdminProduct = () => {
               label="Danh mục"
               rules={[{ required: true, message: "Vui lòng chọn danh mục!" }]}
             >
-              <Select placeholder="Danh mục">
+              <Select placeholder="Tên danh mục">
                 {categories.map((item) => (
                   <Select.Option key={item._id} value={item._id}>
                     {item.name}
@@ -370,7 +369,7 @@ const AdminProduct = () => {
               label="Giá"
               rules={[{ required: true, message: "Vui lòng nhập giá!" }]}
             >
-              <Input type="number" placeholder="Giá sản phẩm" />
+              <Input type="number" placeholder="10000000" />
             </Form.Item>
 
             <Form.Item
@@ -378,7 +377,7 @@ const AdminProduct = () => {
               label="Số lượng"
               rules={[{ required: true, message: "Vui lòng nhập số lượng!" }]}
             >
-              <Input type="number" placeholder="Số lượng" />
+              <Input type="number" placeholder="10" />
             </Form.Item>
 
             <Form.Item
@@ -388,11 +387,11 @@ const AdminProduct = () => {
                 { required: true, message: "Vui lòng nhập tình trạng máy!" },
               ]}
             >
-              <Input type="string" placeholder="Tình trạng máy" />
+              <Input type="string" placeholder="Máy MỚI" />
             </Form.Item>
 
             <Form.Item name="discount" label="Giảm giá (%)">
-              <Input type="number" placeholder="Phần trăm giảm giá" />
+              <Input type="number" placeholder="18" />
             </Form.Item>
 
             <Form.Item
@@ -400,7 +399,7 @@ const AdminProduct = () => {
               label="Quà tặng"
               rules={[{ required: true, message: "Vui lòng nhập quà tặng!" }]}
             >
-              <Input placeholder="Quà tặng kèm" />
+              <Input placeholder="Sạc nhanh" />
             </Form.Item>
 
             <Form.Item

@@ -1,5 +1,4 @@
-import { FacebookFilled, GooglePlusSquareFilled } from "@ant-design/icons";
-import { Button, ConfigProvider, Form, Input, message } from "antd";
+import { Button, ConfigProvider, Form, Input, message, Image } from "antd";
 import classNames from "classnames/bind";
 import styles from "./SignUpPage.module.scss";
 import { useNavigate } from "react-router";
@@ -7,6 +6,7 @@ import * as UserServices from "../../services/UserSevice";
 import { useMutationHooks } from "../../hooks/useMutationHooks";
 import Loading from "../../components/Loading/Loading";
 import { useEffect } from "react";
+import logo from "../../assets/images/logo.png";
 
 const cx = classNames.bind(styles);
 
@@ -38,6 +38,19 @@ const SignUpPage = () => {
   return (
     <div className={cx("wrapper")}>
       {contextHolder}
+      <div onClick={() => navigate("/")} className={cx("logo")}>
+        <Image
+          width={50}
+          height={50}
+          className={cx("img")}
+          preview={false}
+          src={logo}
+          alt="logo"
+        />
+        <div>
+          Duy Minh <span>Mobile</span>
+        </div>
+      </div>
       <div className={cx("form")}>
         <div className={cx("title")}>Đăng ký</div>
         <div className={cx("sub-title")}>

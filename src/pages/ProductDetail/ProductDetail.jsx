@@ -89,26 +89,17 @@ const ProductDetail = () => {
   };
 
   const handleAddProduct = () => {
-    if (user?.id) {
-      dispatch(
-        addOrderProduct({
-          orderItem: {
-            name: product?.name,
-            amount: quantity,
-            image: product?.image,
-            price: product?.price,
-            product: product?._id,
-          },
-        })
-      );
-    } else {
-      messageApi.info("Bạn cần đăng nhập");
-      setTimeout(() => {
-        navigate("/sign-in", {
-          state: location?.pathname,
-        });
-      }, 1000);
-    }
+    dispatch(
+      addOrderProduct({
+        orderItem: {
+          name: product?.name,
+          amount: quantity,
+          image: product?.image,
+          price: product?.price,
+          product: product?._id,
+        },
+      })
+    );
   };
 
   return (
@@ -241,20 +232,22 @@ const ProductDetail = () => {
               "Dung lượng pin:",
             ]}
             items={[
-              `${product?.screen_size}"`,
-              `${product?.before_camera} MP`,
-              `${product?.after_camera} MP`,
+              `${product?.screen_size}`,
+              `${product?.before_camera}`,
+              `${product?.after_camera}`,
               `${product?.chipset}`,
-              `${product?.ram}GB`,
-              `${product?.storage}GB`,
-              `${product?.battery} mAh`,
+              `${product?.ram}`,
+              `${product?.storage}`,
+              `${product?.battery}`,
             ]}
           />
         </div>
       </div>
       <div className={cx("description")}>
         <h3>Mô tả sản phẩm</h3>
-        <p>{product?.description}</p>
+        {product?.description?.split(". ").map((item, index) => (
+          <p key={index}>{item.trim()}.</p>
+        ))}
       </div>
     </div>
   );

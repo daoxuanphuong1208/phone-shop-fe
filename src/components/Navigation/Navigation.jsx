@@ -61,7 +61,7 @@ const Navigation = () => {
                 navigate("/type");
               }}
             >
-              Sản phẩm <DownOutlined />
+              Danh mục sản phẩm <DownOutlined />
             </a>
           </Dropdown>
         </li>

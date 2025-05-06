@@ -82,12 +82,10 @@ const routes = [
   {
     path: "/sign-in",
     page: SignInPage,
-    layout: DefaultLayout,
   },
   {
     path: "/sign-up",
     page: SignUpPage,
-    layout: DefaultLayout,
   },
   {
     path: "/profile",

@@ -7,6 +7,8 @@ import * as UsersService from "../../services/UserSevice";
 import { useMutationHooks } from "../../hooks/useMutationHooks";
 import classNames from "classnames/bind";
 import styles from "./AdminUser.module.scss";
+const DEFAULT_AVATAR =
+  "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=170667a&w=0&k=20&c=LPUo_WZjbXXNnF6ok4uQr8I_Zj6WUVnH_FpREg21qaY=";
 
 const cx = classNames.bind(styles);
 
@@ -58,7 +60,7 @@ const AdminUser = () => {
         <Image
           className={cx("image-user")}
           alt="avatar"
-          src={value}
+          src={value || DEFAULT_AVATAR}
           width={50}
           height={50}
         />
