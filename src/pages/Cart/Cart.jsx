@@ -93,7 +93,11 @@ const Cart = () => {
 
   return (
     <div className={cx("wrapper", "container")}>
-      <Breadcrumb />
+      <Breadcrumb
+        breadcrumFirst={{
+          label: "Giỏ hàng",
+        }}
+      />
       <h3 className={cx("heading")}>Giỏ hàng của bạn</h3>
       {hasProduct ? (
         <div className={cx("content")}>

@@ -75,7 +75,13 @@ const Profile = () => {
       {user?.isAdmin ? <Header isHiddenSearch isHiddenCart /> : <Header />}
       {user?.isAdmin ? null : <Navigation />}
       {contextHolder}
-      {user?.isAdmin ? null : <Breadcrumb />}
+      {user?.isAdmin ? null : (
+        <Breadcrumb
+          breadcrumFirst={{
+            label: "Thông tin tài khoản",
+          }}
+        />
+      )}
       <div className={cx("wrapper")}>
         <h2>Thông tin tài khoản</h2>
         <Loading isLoading={isPending}>

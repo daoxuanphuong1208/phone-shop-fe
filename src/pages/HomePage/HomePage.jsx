@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { SliderComponent as Slider } from "../../components/Slider/Slider";
 import ServiceCard from "../../components/ServiceCard/ServiceCard";
 import FrameProduct from "../../components/FrameProduct/FrameProduct";
+import Loading from "../../components/Loading/Loading";
 
 import service_1 from "../../assets/images/service_1.webp";
 import service_2 from "../../assets/images/service_2.png";
@@ -19,11 +20,13 @@ const HomePage = () => {
   const [categories, setCategories] = useState([]);
   const [totalCategory, setTotalCategory] = useState(0);
   const [sliders, setSliders] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
 
     const fetchData = async () => {
+      setLoading(true);
       try {
         const [resCategories, resSliders] = await Promise.all([
           CategoriesService.getAllCategories(),
@@ -42,6 +45,8 @@ const HomePage = () => {
         }
       } catch (err) {
         console.error("Lỗi khi fetch dữ liệu:", err);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -98,7 +103,9 @@ const HomePage = () => {
   return (
     <main className={cx("wrapper")}>
       <div className="container">
-        {sliders.some((s) => s.status) && <Slider arrImages={sliders} />}
+        <Loading isLoading={loading}>
+          {sliders.some((s) => s.status) && <Slider arrImages={sliders} />}
+        </Loading>
         <div className={cx("service")}>
           {arrService.map((image, index) => (
             <ServiceCard

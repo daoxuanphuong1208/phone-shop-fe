@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import * as ProductService from "../../services/ProductService";
 import Loading from "../../components/Loading/Loading";
 import { useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 
 const cx = classNames.bind(styles);
 
@@ -20,6 +21,8 @@ const TypeProductPage = () => {
     limit: 8,
     total: 0,
   });
+  const location = useLocation();
+
   const [priceFilter, setPriceFilter] = useState([]);
   const fetchProducts = async () => {
     setLoading(true);
@@ -86,35 +89,45 @@ const TypeProductPage = () => {
   ];
 
   return (
-    <div className={cx("wrapper", "container")}>
-      <Breadcrumb />
-      <div className={cx("content")}>
-        <div className={cx("filter-container")}>
-          <div className={cx("filter-item")}>
-            <h4 className={cx("filter-title")}>CHỌN MỨC GIÁ</h4>
-            <Checkbox.Group
-              options={priceOptions}
-              onChange={onChangePrice}
-              className={cx("checkbox-group")}
-            />
+    <Loading isLoading={loading}>
+      <div className={cx("wrapper", "container")}>
+        <Breadcrumb
+          breadcrumFirst={{
+            label: location.state?.category
+              ? location.state.category
+              : "Tất cả sản phẩm",
+          }}
+        />
+        <div className={cx("content")}>
+          <div className={cx("filter-container")}>
+            <div className={cx("filter-item")}>
+              <h4 className={cx("filter-title")}>CHỌN MỨC GIÁ</h4>
+              <Checkbox.Group
+                options={priceOptions}
+                onChange={onChangePrice}
+                className={cx("checkbox-group")}
+              />
+            </div>
+          </div>
+          <div>
+            {products.length === 0 && !loading ? (
+              <div className={cx("no-product")}>Không có sản phẩm nào</div>
+            ) : (
+              <ProductList products={products} col={4} gap={10} />
+            )}
           </div>
         </div>
-        <div>
-          {loading ? (
-            <Loading />
-          ) : (
-            <ProductList products={products} col={4} gap={10} />
-          )}
-        </div>
+        {products.length > 0 && (
+          <Pagination
+            current={pagination.page + 1}
+            pageSize={pagination.limit}
+            total={pagination.total}
+            onChange={handlePageChange}
+            align="end"
+          />
+        )}
       </div>
-      <Pagination
-        current={pagination.page + 1}
-        pageSize={pagination.limit}
-        total={pagination.total}
-        onChange={handlePageChange}
-        align="end"
-      />
-    </div>
+    </Loading>
   );
 };
 

@@ -44,7 +44,11 @@ const Contact = () => {
   return (
     <div className={cx("wrapper", "container")}>
       {contextHolder}
-      <Breadcrumb />
+      <Breadcrumb
+        breadcrumFirst={{
+          label: "Liên hệ",
+        }}
+      />
       <div className={cx("content")}>
         <div className={cx("contact")}>
           <h4>Liên hệ với chúng tôi</h4>

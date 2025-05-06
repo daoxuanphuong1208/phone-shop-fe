@@ -38,8 +38,13 @@ const Navigation = () => {
 
   //handle
   const onClick = ({ key }) => {
+    const selectedCategory = categories.find((cat) => cat._id === key);
     dispatch(searchProduct(key));
-    navigate("/type");
+    navigate("/type", {
+      state: {
+        category: selectedCategory?.name,
+      },
+    });
   };
 
   return (

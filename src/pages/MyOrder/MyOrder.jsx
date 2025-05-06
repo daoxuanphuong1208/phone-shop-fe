@@ -6,6 +6,7 @@ import * as OrderService from "../../services/OrderService";
 import { useSelector } from "react-redux";
 import { message, Modal, Tag } from "antd";
 import { useNavigate } from "react-router-dom";
+import Loading from "../../components/Loading/Loading";
 
 const cx = classNames.bind(styles);
 
@@ -17,13 +18,21 @@ const MyOrder = () => {
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
     const getAllOrders = async () => {
-      if (user?.access_token) {
-        const res = await OrderService.getAllOrders(user?.id);
-        setOrders(res?.data || []);
+      setLoading(true);
+      try {
+        if (user?.access_token) {
+          const res = await OrderService.getAllOrders(user?.id);
+          setOrders(res?.data || []);
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
       }
     };
     getAllOrders();
@@ -91,87 +100,89 @@ const MyOrder = () => {
   };
 
   return (
-    <div className={cx("wrapper", "container")}>
-      {contextHolder}
-      <Breadcrumb
-        breadcrumFirst={{
-          label: "Đơn hàng của tôi",
-        }}
-      />
-      {orders.length === 0 ? (
-        <div className={cx("no-order")}>
-          <h3>Bạn chưa có đơn hàng nào</h3>
-        </div>
-      ) : (
-        orders.map((order) => (
-          <div className={cx("order-card")} key={order._id}>
-            <div className={cx("status")}>
-              <div className={cx("shipping")}>
-                Trạng thái:{" "}
-                <Tag color={getOrderStatusTag(order).color}>
-                  {getOrderStatusTag(order).text}
-                </Tag>
+    <Loading isLoading={loading}>
+      <div className={cx("wrapper", "container")}>
+        {contextHolder}
+        <Breadcrumb
+          breadcrumFirst={{
+            label: "Đơn hàng của tôi",
+          }}
+        />
+        {!loading && orders.length === 0 ? (
+          <div className={cx("no-order")}>
+            <h3>Bạn chưa có đơn hàng nào</h3>
+          </div>
+        ) : (
+          orders.map((order) => (
+            <div className={cx("order-card")} key={order._id}>
+              <div className={cx("status")}>
+                <div className={cx("shipping")}>
+                  Trạng thái:{" "}
+                  <Tag color={getOrderStatusTag(order).color}>
+                    {getOrderStatusTag(order).text}
+                  </Tag>
+                </div>
+                <div className={cx("payment")}>
+                  Thanh toán:{" "}
+                  <Tag color={getPaymentStatusTag(order).color}>
+                    {getPaymentStatusTag(order).text}
+                  </Tag>
+                </div>
+                {order.isCanceled && (
+                  <div className={cx("canceled")}>Đơn hàng đã hủy</div>
+                )}
               </div>
-              <div className={cx("payment")}>
-                Thanh toán:{" "}
-                <Tag color={getPaymentStatusTag(order).color}>
-                  {getPaymentStatusTag(order).text}
-                </Tag>
-              </div>
-              {order.isCanceled && (
-                <div className={cx("canceled")}>Đơn hàng đã hủy</div>
-              )}
-            </div>
 
-            {order.orderItems.map((item, index) => (
-              <div className={cx("product")} key={index}>
-                <img src={item.image} alt={item.name} />
-                <div className={cx("name")}>{item.name}</div>
-                <div className={cx("price")}>
-                  {(item.price * item.amount).toLocaleString("vi-VN", {
+              {order.orderItems.map((item, index) => (
+                <div className={cx("product")} key={index}>
+                  <img src={item.image} alt={item.name} />
+                  <div className={cx("name")}>{item.name}</div>
+                  <div className={cx("price")}>
+                    {(item.price * item.amount).toLocaleString("vi-VN", {
+                      style: "currency",
+                      currency: "VND",
+                    })}
+                  </div>
+                </div>
+              ))}
+              <div className={cx("total")}>
+                Tổng tiền:{" "}
+                <span>
+                  {order.totalPrice.toLocaleString("vi-VN", {
                     style: "currency",
                     currency: "VND",
                   })}
-                </div>
+                </span>
               </div>
-            ))}
-            <div className={cx("total")}>
-              Tổng tiền:{" "}
-              <span>
-                {order.totalPrice.toLocaleString("vi-VN", {
-                  style: "currency",
-                  currency: "VND",
-                })}
-              </span>
-            </div>
 
-            <div className={cx("actions")}>
-              {(order.orderStatus === "pending" ||
-                order.orderStatus === "processing") && (
-                <button onClick={() => showCancelModal(order._id)}>
-                  Hủy đơn hàng
+              <div className={cx("actions")}>
+                {(order.orderStatus === "pending" ||
+                  order.orderStatus === "processing") && (
+                  <button onClick={() => showCancelModal(order._id)}>
+                    Hủy đơn hàng
+                  </button>
+                )}
+                <button onClick={() => navigate(`/order-details/${order._id}`)}>
+                  Xem chi tiết
                 </button>
-              )}
-              <button onClick={() => navigate(`/order-details/${order._id}`)}>
-                Xem chi tiết
-              </button>
+              </div>
             </div>
-          </div>
-        ))
-      )}
+          ))
+        )}
 
-      <Modal
-        title="Hủy đơn hàng"
-        open={open}
-        onOk={handleOk}
-        confirmLoading={confirmLoading}
-        onCancel={handleCancel}
-        okText="Đồng ý"
-        cancelText="Hủy bỏ"
-      >
-        <p>Bạn có chắc muốn hủy đơn hàng?</p>
-      </Modal>
-    </div>
+        <Modal
+          title="Hủy đơn hàng"
+          open={open}
+          onOk={handleOk}
+          confirmLoading={confirmLoading}
+          onCancel={handleCancel}
+          okText="Đồng ý"
+          cancelText="Hủy bỏ"
+        >
+          <p>Bạn có chắc muốn hủy đơn hàng?</p>
+        </Modal>
+      </div>
+    </Loading>
   );
 };
 

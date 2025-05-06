@@ -70,6 +70,8 @@ const AdminProduct = () => {
       messageApi.success("Thêm sản phẩm thành công!");
       setProducts((prev) => [...prev, createdData.data]);
       handleCancel();
+    } else if (isCreateSuccess && createdData?.status === "ERROR") {
+      messageApi.error("Tên sản phẩm đã tồn tại");
     }
   }, [isCreateSuccess]);
 

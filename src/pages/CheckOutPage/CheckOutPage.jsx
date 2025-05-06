@@ -91,6 +91,15 @@ const CheckOutPage = () => {
       });
   };
 
+  const handleOrderSubmit = async () => {
+    try {
+      await form.validateFields();
+      form.submit();
+    } catch (errorInfo) {
+      messageApi.warning("Bạn cần nhập đủ thông tin nhận hàng");
+    }
+  };
+
   const onFinish = (values) => {
     const { province, ward, district, fullName, phone, address, ...rest } =
       values;
@@ -337,7 +346,7 @@ const CheckOutPage = () => {
                   className={cx("order-submit")}
                   size="large"
                   block
-                  onClick={() => form.submit()}
+                  onClick={handleOrderSubmit}
                 >
                   Đặt hàng
                 </Button>

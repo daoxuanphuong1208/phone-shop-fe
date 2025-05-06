@@ -4,6 +4,7 @@ import classNames from "classnames/bind";
 import styles from "./ProductDetail.module.scss";
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
 import BoxWrapper from "../../components/BoxWrapper/BoxWrapper";
+import Loading from "../../components/Loading/Loading";
 import product_details_return from "../../assets/images/product_details_return.png";
 import product_details_commit from "../../assets/images/product_details_commit.png";
 import product_details_transport from "../../assets/images/product_details_transport.png";
@@ -25,12 +26,20 @@ const ProductDetail = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const location = useLocation();
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
     const getProductDetail = async () => {
-      const res = await ProductService.getDetailsProduct(params.id);
-      setProduct(res?.data);
+      setLoading(true);
+      try {
+        const res = await ProductService.getDetailsProduct(params.id);
+        setProduct(res?.data);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
     };
     getProductDetail();
   }, []);
@@ -103,153 +112,155 @@ const ProductDetail = () => {
   };
 
   return (
-    <div className={cx("wrapper", "container")}>
-      {contextHolder}
-      <Breadcrumb
-        breadcrumFirst={{ label: "Chi tiết sản phẩm" }}
-        breadcrumSecond={{ label: product?.name }}
-      />
-      <div className={cx("content")}>
-        <div className={cx("content-image")}>
-          <Image
-            width={365}
-            height={365}
-            src={product?.image}
-            alt="product detail"
-          />
-        </div>
-        <div className={cx("content-info")}>
-          <h3 className={cx("name")}>{product?.name}</h3>
-          <div className={cx("price")}>
-            Giá:
-            <span>
-              {Number(product.price).toLocaleString("vi-VN", {
-                style: "currency",
-                currency: "VND",
-              })}
-            </span>
-          </div>
-          <div className={cx("compare-price")}>
-            Giá thị trường:{" "}
-            <span>
-              {Number(
-                product.price * (1 - product.discount / 100)
-              ).toLocaleString("vi-VN", {
-                style: "currency",
-                currency: "VND",
-              })}
-            </span>
-          </div>
-          <div className={cx("status")}>
-            Tình trạng: <span>{product?.status}</span>
-          </div>
-          <div className={cx("quantity-sold")}>
-            Đã bán: <span>{product?.quantitySold}</span>
-          </div>
-
-          <div className={cx("gift")}>
-            <div>Quà tặng khuyến mãi</div>
-            <span>{product?.gift}</span>
-          </div>
-          <div className={cx("count")}>
-            <div
-              className={cx("decrease")}
-              onClick={() => handleQuantity("decrease")}
-            >
-              -
-            </div>
-            <InputNumber
-              className={cx("custom-input-number")}
-              min={1}
-              max={product?.countInStock}
-              value={quantity}
-              size="large"
-              onChange={onChange}
-              onBlur={onBlur}
-              controls={false}
+    <Loading isLoading={loading}>
+      <div className={cx("wrapper", "container")}>
+        {contextHolder}
+        <Breadcrumb
+          breadcrumFirst={{ label: "Chi tiết sản phẩm" }}
+          breadcrumSecond={{ label: product?.name }}
+        />
+        <div className={cx("content")}>
+          <div className={cx("content-image")}>
+            <Image
+              width={365}
+              height={365}
+              src={product?.image}
+              alt="product detail"
             />
-            <div
-              className={cx("increase")}
-              onClick={() => handleQuantity("increase")}
-            >
-              +
+          </div>
+          <div className={cx("content-info")}>
+            <h3 className={cx("name")}>{product?.name}</h3>
+            <div className={cx("price")}>
+              Giá:
+              <span>
+                {Number(product.price).toLocaleString("vi-VN", {
+                  style: "currency",
+                  currency: "VND",
+                })}
+              </span>
+            </div>
+            <div className={cx("compare-price")}>
+              Giá thị trường:{" "}
+              <span>
+                {Number(
+                  product.price * (1 - product.discount / 100)
+                ).toLocaleString("vi-VN", {
+                  style: "currency",
+                  currency: "VND",
+                })}
+              </span>
+            </div>
+            <div className={cx("status")}>
+              Tình trạng: <span>{product?.status}</span>
+            </div>
+            <div className={cx("quantity-sold")}>
+              Đã bán: <span>{product?.quantitySold}</span>
+            </div>
+
+            <div className={cx("gift")}>
+              <div>Quà tặng khuyến mãi</div>
+              <span>{product?.gift}</span>
+            </div>
+            <div className={cx("count")}>
+              <div
+                className={cx("decrease")}
+                onClick={() => handleQuantity("decrease")}
+              >
+                -
+              </div>
+              <InputNumber
+                className={cx("custom-input-number")}
+                min={1}
+                max={product?.countInStock}
+                value={quantity}
+                size="large"
+                onChange={onChange}
+                onBlur={onBlur}
+                controls={false}
+              />
+              <div
+                className={cx("increase")}
+                onClick={() => handleQuantity("increase")}
+              >
+                +
+              </div>
+            </div>
+            <div className={cx("btn")}>
+              <button onClick={handleAddProduct} className={cx("btn-add")}>
+                Thêm vào giỏ hàng
+              </button>
+              <button onClick={handleBuyNow} className={cx("btn-buy")}>
+                Mua ngay <ShoppingCartOutlined className={cx("cart-icon")} />
+              </button>
             </div>
           </div>
-          <div className={cx("btn")}>
-            <button onClick={handleAddProduct} className={cx("btn-add")}>
-              Thêm vào giỏ hàng
-            </button>
-            <button onClick={handleBuyNow} className={cx("btn-buy")}>
-              Mua ngay <ShoppingCartOutlined className={cx("cart-icon")} />
-            </button>
+          <div className={cx("content-config")}>
+            <BoxWrapper
+              title="Chính sách"
+              icons={[
+                <img
+                  width="30px"
+                  height="30px"
+                  src={product_details_return}
+                  alt="product details return"
+                />,
+                <img
+                  width="30px"
+                  height="30px"
+                  src={product_details_commit}
+                  alt="product details commit"
+                />,
+                <img
+                  width="30px"
+                  height="30px"
+                  src={product_details_transport}
+                  alt="product details transport"
+                />,
+                <img
+                  width="30px"
+                  height="30px"
+                  src={product_details_warranty}
+                  alt="product details warranty"
+                />,
+              ]}
+              items={[
+                "Miễn phí vận chuyển bán kính 5km",
+                "Bảo hành chính hãng toàn quốc",
+                "Cam kết chính hãng 100%",
+                "1 đổi 1 nếu sản phẩm lỗi",
+              ]}
+            />
+            <BoxWrapper
+              title="Cấu hình máy"
+              icons={[
+                "Kích thước màn hình:",
+                "Camera trước:",
+                "Camera sau:",
+                "Chip:",
+                "RAM:",
+                "Bộ nhớ:",
+                "Dung lượng pin:",
+              ]}
+              items={[
+                `${product?.screen_size}`,
+                `${product?.before_camera}`,
+                `${product?.after_camera}`,
+                `${product?.chipset}`,
+                `${product?.ram}`,
+                `${product?.storage}`,
+                `${product?.battery}`,
+              ]}
+            />
           </div>
         </div>
-        <div className={cx("content-config")}>
-          <BoxWrapper
-            title="Chính sách"
-            icons={[
-              <img
-                width="30px"
-                height="30px"
-                src={product_details_return}
-                alt="product details return"
-              />,
-              <img
-                width="30px"
-                height="30px"
-                src={product_details_commit}
-                alt="product details commit"
-              />,
-              <img
-                width="30px"
-                height="30px"
-                src={product_details_transport}
-                alt="product details transport"
-              />,
-              <img
-                width="30px"
-                height="30px"
-                src={product_details_warranty}
-                alt="product details warranty"
-              />,
-            ]}
-            items={[
-              "Miễn phí vận chuyển bán kính 5km",
-              "Bảo hành chính hãng toàn quốc",
-              "Cam kết chính hãng 100%",
-              "1 đổi 1 nếu sản phẩm lỗi",
-            ]}
-          />
-          <BoxWrapper
-            title="Cấu hình máy"
-            icons={[
-              "Kích thước màn hình:",
-              "Camera trước:",
-              "Camera sau:",
-              "Chip:",
-              "RAM:",
-              "Bộ nhớ:",
-              "Dung lượng pin:",
-            ]}
-            items={[
-              `${product?.screen_size}`,
-              `${product?.before_camera}`,
-              `${product?.after_camera}`,
-              `${product?.chipset}`,
-              `${product?.ram}`,
-              `${product?.storage}`,
-              `${product?.battery}`,
-            ]}
-          />
+        <div className={cx("description")}>
+          <h3>Mô tả sản phẩm</h3>
+          {product?.description?.split(". ").map((item, index) => (
+            <p key={index}>{item.trim()}.</p>
+          ))}
         </div>
       </div>
-      <div className={cx("description")}>
-        <h3>Mô tả sản phẩm</h3>
-        {product?.description?.split(". ").map((item, index) => (
-          <p key={index}>{item.trim()}.</p>
-        ))}
-      </div>
-    </div>
+    </Loading>
   );
 };
 

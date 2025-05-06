@@ -3,6 +3,7 @@ import styles from "./FrameProduct.module.scss";
 import { useEffect, useState } from "react";
 import * as ProductService from "../../services/ProductService";
 import ProductList from "../ProductList/ProductList";
+import Loading from "../../components/Loading/Loading";
 
 const cx = classNames.bind(styles);
 
@@ -10,8 +11,10 @@ const FrameProduct = ({ title, categoryId }) => {
   const [limit, setLimit] = useState(5);
   const [products, setProducts] = useState([]);
   const [hasMore, setHasMore] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const fetchProducts = async (currentLimit) => {
+    setLoading(true);
     try {
       const res = await ProductService.getAllProduct({
         limit: currentLimit,
@@ -25,6 +28,8 @@ const FrameProduct = ({ title, categoryId }) => {
       }
     } catch (err) {
       console.error("Lỗi lấy sản phẩm:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -37,24 +42,26 @@ const FrameProduct = ({ title, categoryId }) => {
   };
 
   return (
-    <section className={cx("wrapper")}>
-      <div className={cx("header")}>
-        <div className={cx("label")}>Nổi bật</div>
-        <div className={cx("model")}>
-          <div>{title}</div>
+    <Loading isLoading={loading}>
+      <section className={cx("wrapper")}>
+        <div className={cx("header")}>
+          <div className={cx("label")}>Nổi bật</div>
+          <div className={cx("model")}>
+            <div>{title}</div>
+          </div>
         </div>
-      </div>
-      <div className={cx("product-list")}>
-        <ProductList products={products} col={5} gap={15} />
-      </div>
-      {hasMore && (
-        <div className={cx("show-more")}>
-          <button className={cx("btn")} onClick={handleShowMore}>
-            Xem thêm sản phẩm
-          </button>
+        <div className={cx("product-list")}>
+          <ProductList products={products} col={5} gap={15} />
         </div>
-      )}
-    </section>
+        {hasMore && (
+          <div className={cx("show-more")}>
+            <button className={cx("btn")} onClick={handleShowMore}>
+              Xem thêm sản phẩm
+            </button>
+          </div>
+        )}
+      </section>
+    </Loading>
   );
 };
 
