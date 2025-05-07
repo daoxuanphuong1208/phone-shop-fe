@@ -12,7 +12,6 @@ import { DeleteOutlined, PrinterOutlined } from "@ant-design/icons";
 import { useEffect, useState, useRef } from "react";
 import * as OrderService from "../../services/OrderService";
 import Loading from "../../components/Loading/Loading";
-import { useReactToPrint } from "react-to-print";
 
 const AdminOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -406,7 +405,7 @@ const AdminOrders = () => {
       />
 
       <Modal
-        title="Xác nhận hủy đơn hàng"
+        title="Xác nhận hủy đơn hàng?"
         open={isModalOpen}
         onOk={handleModalOk}
         confirmLoading={confirmLoading}
@@ -414,16 +413,13 @@ const AdminOrders = () => {
         okText="Đồng ý"
         cancelText="Hủy bỏ"
       >
-        {selectedOrder?.isPaid ? (
+        {selectedOrder?.isPaid && (
           <>
             <p style={{ fontWeight: "bold" }}>
               Lưu ý: Đơn hàng này đã được thanh toán. Bạn cần hoàn tiền cho
               khách sau khi hủy.
             </p>
-            <p>Xác nhận hủy đơn hàng?</p>
           </>
-        ) : (
-          <p>Bạn có chắc chắn muốn hủy đơn hàng này không?</p>
         )}
       </Modal>
     </Loading>

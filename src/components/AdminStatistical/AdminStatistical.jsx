@@ -115,7 +115,7 @@ const AdminStatistical = () => {
         <BarChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" />
-          <YAxis tick={{ fontSize: 12 }} />
+          <YAxis tick={{ fontSize: 11 }} />
           <Tooltip />
           <Bar dataKey="uv" fill="#8956FF" />
         </BarChart>

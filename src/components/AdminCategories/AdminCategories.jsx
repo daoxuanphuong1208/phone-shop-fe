@@ -57,6 +57,10 @@ const AdminCategories = () => {
       setCategories((prev) => [...prev, createdData.data]);
       handleCancel();
     }
+
+    if (isCreateSuccess && createdData?.status === "ERROR") {
+      messageApi.error(createdData.message);
+    }
   }, [isCreateSuccess]);
 
   useEffect(() => {
