@@ -53,7 +53,7 @@ const AdminCategories = () => {
 
   useEffect(() => {
     if (isCreateSuccess && createdData?.status === "OK") {
-      messageApi.success("Thêm danh mục thành công!");
+      messageApi.success("Thêm mới thành công!");
       setCategories((prev) => [...prev, createdData.data]);
       handleCancel();
     }
@@ -65,7 +65,7 @@ const AdminCategories = () => {
 
   useEffect(() => {
     if (isUpdateSuccess && updatedData?.status === "OK") {
-      messageApi.success("Cập nhật danh mục thành công!");
+      messageApi.success("Cập nhật thành công!");
       setCategories((prev) =>
         prev.map((item) =>
           item._id === updatedData.data._id ? updatedData.data : item
@@ -77,7 +77,7 @@ const AdminCategories = () => {
 
   useEffect(() => {
     if (isDeleteSuccess && deletedData?.status === "OK") {
-      messageApi.success("Xóa danh mục thành công!");
+      messageApi.success("Xóa thành công!");
       setCategories((prev) =>
         prev.filter((item) => item._id !== deletingIdRef.current)
       );

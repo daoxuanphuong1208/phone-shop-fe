@@ -67,7 +67,7 @@ const AdminProduct = () => {
 
   useEffect(() => {
     if (isCreateSuccess && createdData?.status === "OK") {
-      messageApi.success("Thêm sản phẩm thành công!");
+      messageApi.success("Thêm mới thành công!");
       setProducts((prev) => [...prev, createdData.data]);
       handleCancel();
     } else if (isCreateSuccess && createdData?.status === "ERROR") {
@@ -77,7 +77,7 @@ const AdminProduct = () => {
 
   useEffect(() => {
     if (isUpdateSuccess && updatedData?.status === "OK") {
-      messageApi.success("Cập nhật sản phẩm thành công!");
+      messageApi.success("Cập nhật thành công!");
       setProducts((prev) =>
         prev.map((item) =>
           item._id === updatedData.data._id ? updatedData.data : item
@@ -89,7 +89,7 @@ const AdminProduct = () => {
 
   useEffect(() => {
     if (isDeleteSuccess && deletedData?.status === "OK") {
-      messageApi.success("Xóa sản phẩm thành công!");
+      messageApi.success("Xóa thành công!");
       setProducts((prev) =>
         prev.filter((item) => item._id !== deletingIdRef.current)
       );
