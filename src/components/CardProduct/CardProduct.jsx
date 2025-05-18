@@ -25,6 +25,7 @@ const CardProduct = ({ product }) => {
           image: product.image,
           price: product.price,
           product: product._id,
+          countInStock: product.countInStock,
         },
       })
     );

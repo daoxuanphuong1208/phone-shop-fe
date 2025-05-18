@@ -29,7 +29,15 @@ export const orderSlice = createSlice({
         state.orderItems.push(orderItem);
       }
     },
-
+    updateOrderProductAmount: (state, action) => {
+      const { idProduct, amount } = action.payload;
+      const index = state.orderItems.findIndex(
+        (item) => item.product === idProduct
+      );
+      if (index !== -1) {
+        state.orderItems[index].amount = amount;
+      }
+    },
     removeOrderProduct: (state, action) => {
       const { idProduct } = action.payload;
       state.orderItems = state.orderItems.filter(
@@ -57,6 +65,7 @@ export const {
   removeOrderProduct,
   removeAllOrderProduct,
   setOrderInfo,
+  updateOrderProductAmount,
 } = orderSlice.actions;
 
 export default orderSlice.reducer;

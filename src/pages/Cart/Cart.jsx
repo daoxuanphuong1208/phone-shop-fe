@@ -1,10 +1,11 @@
-import { Table } from "antd";
+import { Table, InputNumber } from "antd";
 import classNames from "classnames/bind";
 import styles from "./Cart.module.scss";
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
 import no_cart from "../../assets/images/no-cart.webp";
 import { useSelector, useDispatch } from "react-redux";
 import {
+  updateOrderProductAmount,
   removeOrderProduct,
   removeAllOrderProduct,
 } from "../../redux/slides/orderSlice";
@@ -31,6 +32,41 @@ const Cart = () => {
 
   const handleCheckout = () => {
     navigate("/checkout");
+  };
+
+  const handleChangeQuantity = (value, record) => {
+    let newValue = value;
+
+    if (!value || value < 1) {
+      newValue = 1;
+    } else if (value > record.countInStock) {
+      newValue = record.countInStock;
+    }
+
+    dispatch(
+      updateOrderProductAmount({
+        idProduct: record.key,
+        amount: newValue,
+      })
+    );
+  };
+
+  const handleBlurQuantity = (value, record) => {
+    if (value < 1) {
+      dispatch(
+        updateOrderProductAmount({
+          idProduct: record.key,
+          amount: 1,
+        })
+      );
+    } else if (value > record.countInStock) {
+      dispatch(
+        updateOrderProductAmount({
+          idProduct: record.infor.id,
+          amount: record.countInStock,
+        })
+      );
+    }
   };
 
   const columns = [
@@ -65,6 +101,51 @@ const Cart = () => {
       title: "Số lượng",
       dataIndex: "amount",
       key: "amount",
+      render: (_, record) => (
+        <div className={cx("count")}>
+          <div
+            className={cx("decrease")}
+            onClick={() => {
+              if (record.amount > 1) {
+                dispatch(
+                  updateOrderProductAmount({
+                    idProduct: record.key,
+                    amount: record.amount - 1,
+                  })
+                );
+              }
+            }}
+          >
+            -
+          </div>
+          <InputNumber
+            className={cx("custom-input-number")}
+            min={1}
+            max={record.countInStock}
+            value={record.amount}
+            size="large"
+            onChange={(value) => handleChangeQuantity(value, record)}
+            onBlur={() => handleBlurQuantity(record.amount, record)}
+            controls={false}
+          />
+          <div
+            className={cx("increase")}
+            onClick={() => {
+              console.log(record);
+              if (record.amount < record.countInStock) {
+                dispatch(
+                  updateOrderProductAmount({
+                    idProduct: record.key,
+                    amount: record.amount + 1,
+                  })
+                );
+              }
+            }}
+          >
+            +
+          </div>
+        </div>
+      ),
     },
     {
       title: "Thành tiền",
@@ -86,6 +167,7 @@ const Cart = () => {
       currency: "VND",
     })}`,
     amount: item.amount,
+    countInStock: item.countInStock,
     priceFinal: `${(item?.price * item.amount).toLocaleString("vi-VN")}₫`,
   }));
 
