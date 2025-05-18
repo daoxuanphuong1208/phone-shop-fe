@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Divider, Card, message } from "antd";
+import { Divider, Card, message, Select } from "antd";
 import {
   AreaChartOutlined,
   ContainerOutlined,
@@ -24,11 +24,13 @@ const cx = classNames.bind(styles);
 const AdminStatistical = () => {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
+  const currentYear = new Date().getFullYear();
+  const [selectedYear, setSelectedYear] = useState(currentYear);
 
-  const fetchStats = async () => {
+  const fetchStats = async (year) => {
     try {
       setLoading(true);
-      const res = await StatsService.getStats();
+      const res = await StatsService.getStats(year);
       if (res.status === "OK") {
         setStats(res.data);
       } else {
@@ -43,8 +45,8 @@ const AdminStatistical = () => {
   };
 
   useEffect(() => {
-    fetchStats();
-  }, []);
+    fetchStats(selectedYear);
+  }, [selectedYear]);
 
   const cardStats = stats
     ? [
@@ -110,7 +112,21 @@ const AdminStatistical = () => {
         )}
       </div>
 
-      <h3>Doanh thu theo tháng: Năm {new Date().getFullYear()}</h3>
+      <h3>Doanh thu theo năm</h3>
+      <div className={cx("yearSelectWrapper")}>
+        <span>Chọn năm: </span>
+        <Select
+          value={selectedYear}
+          onChange={(value) => setSelectedYear(value)}
+          style={{ width: 120, marginLeft: 8 }}
+        >
+          {[currentYear, currentYear - 1, currentYear - 2].map((year) => (
+            <Select.Option key={year} value={year}>
+              {year}
+            </Select.Option>
+          ))}
+        </Select>
+      </div>
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" />

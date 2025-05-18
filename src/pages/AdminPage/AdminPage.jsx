@@ -26,7 +26,7 @@ const cx = classNames.bind(styles);
 const items = [
   {
     key: "1",
-    label: "Trang chủ",
+    label: "Thống kê",
     icon: <AreaChartOutlined />,
   },
   {
