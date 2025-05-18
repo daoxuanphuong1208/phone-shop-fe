@@ -15,6 +15,7 @@ import {
   PlusOutlined,
   DeleteOutlined,
   EditOutlined,
+  EyeOutlined,
   ExportOutlined,
 } from "@ant-design/icons";
 import classNames from "classnames/bind";
@@ -41,6 +42,7 @@ const AdminProduct = () => {
   const [imageBase64, setImageBase64] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [categories, setCategories] = useState([]);
+  const [viewMode, setViewMode] = useState(false);
 
   const createMutation = useMutationHooks((data) =>
     ProductService.createProduct(data)
@@ -136,6 +138,7 @@ const AdminProduct = () => {
   const handleCancel = () => {
     setIsModalOpen(false);
     setEditMode(false);
+    setViewMode(false);
     setEditingProduct(null);
     form.resetFields();
   };
@@ -168,6 +171,16 @@ const AdminProduct = () => {
     } catch (error) {
       console.error("Lỗi validate:", error);
     }
+  };
+
+  const handleView = (record) => {
+    setEditingProduct(record);
+    setEditMode(false);
+    setViewMode(true);
+    setIsModalOpen(true);
+    setImagePreview(record.image);
+    setImageBase64(null);
+    form.setFieldsValue(record);
   };
 
   const handleEdit = (record) => {
@@ -236,6 +249,7 @@ const AdminProduct = () => {
             <Button danger icon={<DeleteOutlined />} />
           </Popconfirm>
           <Button icon={<EditOutlined />} onClick={() => handleEdit(record)} />
+          <Button icon={<EyeOutlined />} onClick={() => handleView(record)} />
         </Space>
       ),
     },
@@ -314,13 +328,36 @@ const AdminProduct = () => {
         </div>
         <Modal
           width={800}
-          title={editMode ? "Chỉnh sửa sản phẩm" : "Thêm sản phẩm"}
+          title={
+            viewMode
+              ? "Chi tiết sản phẩm"
+              : editMode
+              ? "Chỉnh sửa sản phẩm"
+              : "Thêm sản phẩm"
+          }
           open={isModalOpen}
           onOk={editMode ? handleEditProduct : handleAddProduct}
           onCancel={handleCancel}
           confirmLoading={isCreating}
           okText={editMode ? "Cập nhật" : "Thêm sản phẩm"}
-          cancelText="Hủy bỏ"
+          cancelText="Đóng"
+          footer={
+            viewMode
+              ? null
+              : [
+                  <Button key="back" onClick={handleCancel}>
+                    Hủy bỏ
+                  </Button>,
+                  <Button
+                    key="submit"
+                    type="primary"
+                    loading={isCreating}
+                    onClick={editMode ? handleEditProduct : handleAddProduct}
+                  >
+                    {editMode ? "Cập nhật" : "Thêm sản phẩm"}
+                  </Button>,
+                ]
+          }
         >
           <Form form={form} name="form-product" layout="vertical">
             <Form.Item
@@ -328,19 +365,21 @@ const AdminProduct = () => {
               label="Tên sản phẩm"
               rules={[{ required: true, message: "Vui lòng nhập tên!" }]}
             >
-              <Input placeholder="Tên sản phẩm" />
+              <Input placeholder="Tên sản phẩm" disabled={viewMode} />
             </Form.Item>
 
             <Form.Item label="Ảnh sản phẩm" required>
-              <Upload
-                accept="image/*"
-                showUploadList={false}
-                onChange={handleChangeImage}
-                beforeUpload={() => false}
-                maxCount={1}
-              >
-                <Button icon={<PlusOutlined />}>Chọn ảnh</Button>
-              </Upload>
+              {!viewMode && (
+                <Upload
+                  accept="image/*"
+                  showUploadList={false}
+                  onChange={handleChangeImage}
+                  beforeUpload={() => false}
+                  maxCount={1}
+                >
+                  <Button icon={<PlusOutlined />}>Chọn ảnh</Button>
+                </Upload>
+              )}
               {imagePreview && (
                 <Image
                   src={imagePreview}
@@ -357,7 +396,7 @@ const AdminProduct = () => {
               label="Danh mục"
               rules={[{ required: true, message: "Vui lòng chọn danh mục!" }]}
             >
-              <Select placeholder="Tên danh mục">
+              <Select placeholder="Tên danh mục" disabled={viewMode}>
                 {categories.map((item) => (
                   <Select.Option key={item._id} value={item._id}>
                     {item.name}
@@ -379,7 +418,7 @@ const AdminProduct = () => {
               label="Số lượng"
               rules={[{ required: true, message: "Vui lòng nhập số lượng!" }]}
             >
-              <Input type="number" placeholder="10" />
+              <Input type="number" placeholder="10" disabled={viewMode} />
             </Form.Item>
 
             <Form.Item
@@ -389,11 +428,11 @@ const AdminProduct = () => {
                 { required: true, message: "Vui lòng nhập tình trạng máy!" },
               ]}
             >
-              <Input type="string" placeholder="Máy MỚI" />
+              <Input type="string" placeholder="Máy MỚI" disabled={viewMode} />
             </Form.Item>
 
             <Form.Item name="discount" label="Giảm giá (%)">
-              <Input type="number" placeholder="18" />
+              <Input type="number" placeholder="18" disabled={viewMode} />
             </Form.Item>
 
             <Form.Item
@@ -401,7 +440,7 @@ const AdminProduct = () => {
               label="Quà tặng"
               rules={[{ required: true, message: "Vui lòng nhập quà tặng!" }]}
             >
-              <Input placeholder="Sạc nhanh" />
+              <Input placeholder="Sạc nhanh" disabled={viewMode} />
             </Form.Item>
 
             <Form.Item
@@ -409,7 +448,11 @@ const AdminProduct = () => {
               label="Sao đánh giá"
               rules={[{ required: true, message: "Vui lòng nhập sao!" }]}
             >
-              <Input type="number" placeholder="Sao đánh giá (1 - 5)" />
+              <Input
+                type="number"
+                placeholder="Sao đánh giá (1 - 5)"
+                disabled={viewMode}
+              />
             </Form.Item>
 
             <Form.Item
@@ -417,35 +460,42 @@ const AdminProduct = () => {
               label="Mô tả"
               rules={[{ required: true, message: "Vui lòng nhập mô tả!" }]}
             >
-              <Input.TextArea rows={4} placeholder="Mô tả sản phẩm" />
+              <Input.TextArea
+                rows={4}
+                placeholder="Mô tả sản phẩm"
+                disabled={viewMode}
+              />
             </Form.Item>
 
             <Form.Item name="screen_size" label="Kích thước màn hình">
-              <Input placeholder="6.5 inch, ..." />
+              <Input placeholder="6.5 inch, ..." disabled={viewMode} />
             </Form.Item>
 
             <Form.Item name="before_camera" label="Camera trước">
-              <Input placeholder="12MP, ..." />
+              <Input placeholder="12MP, ..." disabled={viewMode} />
             </Form.Item>
 
             <Form.Item name="after_camera" label="Camera sau">
-              <Input placeholder="50MP + 12MP, ..." />
+              <Input placeholder="50MP + 12MP, ..." disabled={viewMode} />
             </Form.Item>
 
             <Form.Item name="chipset" label="Chipset">
-              <Input placeholder="Snapdragon 8 Gen 2, ..." />
+              <Input
+                placeholder="Snapdragon 8 Gen 2, ..."
+                disabled={viewMode}
+              />
             </Form.Item>
 
             <Form.Item name="ram" label="RAM">
-              <Input placeholder="8GB, ..." />
+              <Input placeholder="8GB, ..." disabled={viewMode} />
             </Form.Item>
 
             <Form.Item name="storage" label="Bộ nhớ trong">
-              <Input placeholder="128GB, 256GB, ..." />
+              <Input placeholder="128GB, 256GB, ..." disabled={viewMode} />
             </Form.Item>
 
             <Form.Item name="battery" label="Dung lượng pin">
-              <Input placeholder="5000mAh, ..." />
+              <Input placeholder="5000mAh, ..." disabled={viewMode} />
             </Form.Item>
           </Form>
         </Modal>
