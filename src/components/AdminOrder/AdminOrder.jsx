@@ -8,8 +8,12 @@ import {
   Modal,
   Popconfirm,
 } from "antd";
-import { DeleteOutlined, PrinterOutlined } from "@ant-design/icons";
-import { useEffect, useState, useRef } from "react";
+import {
+  DeleteOutlined,
+  PrinterOutlined,
+  EyeOutlined,
+} from "@ant-design/icons";
+import { useEffect, useState } from "react";
 import * as OrderService from "../../services/OrderService";
 import Loading from "../../components/Loading/Loading";
 
@@ -21,10 +25,35 @@ const AdminOrders = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [confirmLoading, setConfirmLoading] = useState(false);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [viewedOrder, setViewedOrder] = useState(null);
+  const [provinces, setProvinces] = useState([]);
 
   useEffect(() => {
     fetchOrders();
   }, []);
+
+  const getProvinceName = (code) => {
+    return provinces.find((prov) => prov.code === Number(code))?.name || "";
+  };
+
+  const getDistrictName = (code) => {
+    for (const province of provinces) {
+      const district = province.districts.find((d) => d.code === Number(code));
+      if (district) return district.name;
+    }
+    return "";
+  };
+
+  const getWardName = (code) => {
+    for (const province of provinces) {
+      for (const district of province.districts) {
+        const ward = district.wards.find((w) => w.code === Number(code));
+        if (ward) return ward.name;
+      }
+    }
+    return "";
+  };
 
   const fetchOrders = async () => {
     try {
@@ -271,6 +300,26 @@ const AdminOrders = () => {
     printWindow.document.close();
   };
 
+  const fetchProvinces = async () => {
+    try {
+      const res = await fetch("https://provinces.open-api.vn/api/?depth=3");
+      const data = await res.json();
+      setProvinces(data);
+    } catch (err) {
+      console.error("Lỗi khi lấy tỉnh thành:", err);
+    }
+  };
+
+  const handleView = (order) => {
+    try {
+      fetchProvinces();
+      setViewedOrder(order);
+      setIsViewModalOpen(true);
+    } catch (error) {
+      messageApi.error("Không thể xemm đơn hàng.");
+    }
+  };
+
   const columns = [
     {
       title: "Khách hàng",
@@ -345,7 +394,11 @@ const AdminOrders = () => {
 
         if (orderStatus === "processing" || orderStatus === "shipped") {
           return (
-            <div style={{ display: "flex", alignItems: "center" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <Button
+                icon={<EyeOutlined />}
+                onClick={() => handleView(record)}
+              />
               <Select
                 value={orderStatus}
                 onChange={(value) => handleStatusChange(record._id, value)}
@@ -361,16 +414,22 @@ const AdminOrders = () => {
 
         if (orderStatus === "delivered") {
           return (
-            <Button
-              type="default"
-              onClick={() => {
-                handlePrintOrder(record);
-              }}
-              icon={<PrinterOutlined />}
-              style={{ marginLeft: 8 }}
-            >
-              In hóa đơn
-            </Button>
+            <div>
+              <Button
+                icon={<EyeOutlined />}
+                onClick={() => handleView(record)}
+              />
+              <Button
+                type="default"
+                onClick={() => {
+                  handlePrintOrder(record);
+                }}
+                icon={<PrinterOutlined />}
+                style={{ marginLeft: 8 }}
+              >
+                In hóa đơn
+              </Button>
+            </div>
           );
         }
 
@@ -403,6 +462,87 @@ const AdminOrders = () => {
         rowKey="_id"
         pagination={{ pageSize: 5 }}
       />
+      <Modal
+        title="Chi tiết đơn hàng"
+        open={isViewModalOpen}
+        onCancel={() => setIsViewModalOpen(false)}
+        footer={[
+          <Button key="close" onClick={() => setIsViewModalOpen(false)}>
+            Đóng
+          </Button>,
+        ]}
+        width={800}
+      >
+        {viewedOrder ? (
+          <>
+            <p>
+              <strong>Mã đơn hàng:</strong> {viewedOrder._id}
+            </p>
+            <p>
+              <strong>Ngày tạo:</strong>{" "}
+              {new Date(viewedOrder.createdAt).toLocaleString()}
+            </p>
+            <Divider />
+            <h3>Thông tin khách hàng</h3>
+            <p>
+              <strong>Họ tên:</strong> {viewedOrder.shippingAddress?.fullName}
+            </p>
+            <p>
+              <strong>Địa chỉ:</strong>{" "}
+              {`${viewedOrder.shippingAddress.address}, ${getWardName(
+                viewedOrder.shippingAddress.ward
+              )}, ${getDistrictName(
+                viewedOrder.shippingAddress.district
+              )}, ${getProvinceName(viewedOrder.shippingAddress.city)}`}
+            </p>
+            <p>
+              <strong>SĐT:</strong> {viewedOrder.shippingAddress?.phone}
+            </p>
+            <Divider />
+            <h3>Danh sách sản phẩm</h3>
+            <Table
+              dataSource={viewedOrder.orderItems}
+              columns={[
+                { title: "Tên sản phẩm", dataIndex: "name", key: "name" },
+                { title: "Số lượng", dataIndex: "amount", key: "amount" },
+                {
+                  title: "Giá",
+                  dataIndex: "price",
+                  key: "price",
+                  render: (price) => `${price.toLocaleString()}₫`,
+                },
+                {
+                  title: "Thành tiền",
+                  key: "total",
+                  render: (_, item) =>
+                    `${(item.price * item.amount).toLocaleString()}₫`,
+                },
+              ]}
+              pagination={false}
+              rowKey={(item) => item._id}
+            />
+            <Divider />
+            <p style={{ textAlign: "right" }}>
+              <strong>Phí giao hàng:</strong>{" "}
+              {viewedOrder.shippingPrice.toLocaleString()}₫
+            </p>
+            <p style={{ textAlign: "right" }}>
+              <strong>Tổng tiền:</strong>{" "}
+              {viewedOrder.totalPrice.toLocaleString()}₫
+            </p>
+            <p style={{ textAlign: "right" }}>
+              <strong>Thanh toán:</strong>{" "}
+              {viewedOrder.isPaid ? "Đã thanh toán" : "Chưa thanh toán"}
+            </p>
+            <p style={{ textAlign: "right" }}>
+              <strong>Trạng thái:</strong>{" "}
+              {getStatusTag(viewedOrder.orderStatus)}
+            </p>
+          </>
+        ) : (
+          <Loading />
+        )}
+      </Modal>
 
       <Modal
         title="Xác nhận hủy đơn hàng?"
